@@ -1,1 +1,192 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LifeFlow — Give Blood, Give Life</title>
+  <meta name="description" content="Join thousands of donors saving lives every day. Find donation centers, check eligibility, and schedule your appointment."/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+</head>
+<body>
+  <nav id="navbar">
+    <a href="index.html" class="nav-logo">Life<span>Flow</span></a>
+    <ul class="nav-links">
+      <li><a href="#why">Why Donate</a></li>
+      <li><a href="pages/find-center.html">Find Center</a></li>
+      <li><a href="pages/blood-stock.html">Blood Stock</a></li>
+      <li><a href="pages/request-blood.html">Request Blood</a></li>
+      <li><a href="pages/login.html">Donor Login</a></li>
+    </ul>
+    <a href="pages/register.html" class="nav-cta">Donate Now</a>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="#why">Why Donate</a></li>
+      <li><a href="#eligibility">Eligibility</a></li>
+      <li><a href="pages/find-center.html">Find Center</a></li>
+      <li><a href="pages/faq.html">FAQ</a></li>
+      <li><a href="pages/register.html" class="mobile-cta">Donate Now</a></li>
+    </ul>
+  </div>
+  <section class="hero">
+    <div class="hero-content">
+      <span class="hero-tag"><span class="pulse-dot"></span> Urgent Need Today</span>
+      <h1>One Donation.<br/><em>Three Lives</em> Saved.</h1>
+      <p class="hero-sub">Every two seconds, someone in the world needs blood. Your single donation can save up to three lives. It takes 30 minutes. The impact lasts forever.</p>
+      <div class="hero-actions">
+        <a href="pages/register.html" class="btn-primary">Schedule Donation →</a>
+        <a href="#why" class="btn-secondary">Learn More ↓</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-number">38K+</div><div class="stat-label">Donations This Month</div></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><div class="stat-number">114K</div><div class="stat-label">Lives Saved</div></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><div class="stat-number">200+</div><div class="stat-label">Donation Centers</div></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="drop-wrap">
+        <svg class="drop-svg" viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="dropGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#FF3B5C"/>
+              <stop offset="100%" style="stop-color:#8B0000"/>
+            </linearGradient>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+              <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <path d="M100 10 C100 10, 20 110, 20 160 A80 80 0 0 0 180 160 C180 110, 100 10, 100 10Z" fill="url(#dropGrad)" filter="url(#glow)" opacity="0.95"/>
+          <path d="M70 155 Q90 130 100 175" stroke="rgba(255,255,255,0.4)" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div class="drop-ring drop-ring-1"></div>
+        <div class="drop-ring drop-ring-2"></div>
+        <div class="drop-ring drop-ring-3"></div>
+      </div>
+      <div class="blood-types">
+        <span class="btype" style="--d:0s">A+</span>
+        <span class="btype" style="--d:0.1s">B+</span>
+        <span class="btype" style="--d:0.2s">O+</span>
+        <span class="btype" style="--d:0.3s">AB+</span>
+        <span class="btype" style="--d:0.4s">A-</span>
+        <span class="btype" style="--d:0.5s">B-</span>
+        <span class="btype" style="--d:0.6s">O-</span>
+        <span class="btype" style="--d:0.7s">AB-</span>
+      </div>
+    </div>
+  </section>
+  <div class="urgency-banner">
+    <div class="urgency-inner">
+      <span class="urgency-icon">🩸</span>
+      <p><strong>Critical shortage:</strong> O-negative blood supplies are at 15% of needed levels. If you're O-, your donation is especially urgent.</p>
+      <a href="pages/register.html" class="urgency-link">Donate Now →</a>
+    </div>
+  </div>
+  <section class="section" id="why">
+    <div class="section-header">
+      <span class="section-tag">Why It Matters</span>
+      <h2>Blood Cannot Be<br/><em>Manufactured</em></h2>
+      <p>Only generous donors like you can meet the need. Here's the impact your donation makes.</p>
+    </div>
+    <div class="cards-grid">
+      <div class="card"><div class="card-icon">🏥</div><h3>Trauma & Surgery</h3><p>Accident victims and surgical patients can require up to 100 units of blood. Donors make emergency care possible.</p></div>
+      <div class="card card-red"><div class="card-icon">👶</div><h3>Newborn Care</h3><p>Premature babies often need small, frequent transfusions. Your donation can nurture the very beginning of a life.</p></div>
+      <div class="card"><div class="card-icon">♋</div><h3>Cancer Patients</h3><p>Chemotherapy destroys blood cells. Cancer patients may need transfusions every few days throughout treatment.</p></div>
+      <div class="card"><div class="card-icon">🧬</div><h3>Chronic Illness</h3><p>Patients with sickle cell, thalassemia, and other conditions rely on regular transfusions to survive.</p></div>
+      <div class="card card-outlined"><div class="card-icon">💪</div><h3>Good for You Too</h3><p>Donating blood burns calories, reveals health insights, and has been linked to reduced heart disease risk.</p></div>
+      <div class="card card-outlined"><div class="card-icon">🤝</div><h3>Community Impact</h3><p>Local blood banks serve local hospitals. Your donation stays in your community, saving your neighbors.</p></div>
+    </div>
+  </section>
+  <section class="section section-dark" id="process">
+    <div class="section-header light">
+      <span class="section-tag">Simple Process</span>
+      <h2>Donating Takes<br/><em>30 Minutes</em></h2>
+      <p>From registration to recovery — it's easier than you think.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-number">01</div><h3>Register</h3><p>Book online or walk in. Bring a valid ID and stay hydrated.</p></div>
+      <div class="step-arrow">→</div>
+      <div class="step"><div class="step-number">02</div><h3>Health Screen</h3><p>A quick check of blood pressure, hemoglobin, and a short questionnaire.</p></div>
+      <div class="step-arrow">→</div>
+      <div class="step"><div class="step-number">03</div><h3>Donate</h3><p>The actual blood draw takes only 8–10 minutes. You'll be comfortable throughout.</p></div>
+      <div class="step-arrow">→</div>
+      <div class="step"><div class="step-number">04</div><h3>Refresh</h3><p>Enjoy snacks and juice. Your body replenishes plasma within 24 hours.</p></div>
+    </div>
+  </section>
+  <section class="section" id="eligibility">
+    <div class="section-header">
+      <span class="section-tag">Am I Eligible?</span>
+      <h2>Basic <em>Requirements</em></h2>
+      <p>Most healthy adults can donate. Check the basics below.</p>
+    </div>
+    <div class="eligibility-grid">
+      <div class="elig-col elig-yes">
+        <h3>✓ You Can Donate If...</h3>
+        <ul>
+          <li>You are 17 years or older (16 with parental consent in some states)</li>
+          <li>You weigh at least 110 lbs (50 kg)</li>
+          <li>You are in good general health</li>
+          <li>You have not donated whole blood in the last 56 days</li>
+          <li>You have had adequate sleep and eaten a meal today</li>
+        </ul>
+      </div>
+      <div class="elig-col elig-no">
+        <h3>✗ Temporary Deferrals</h3>
+        <ul>
+          <li>Cold, flu, or active infection</li>
+          <li>Recent tattoo or piercing (within 3 months)</li>
+          <li>Travel to certain countries (varies)</li>
+          <li>Pregnancy or recent childbirth</li>
+          <li>Some medications (ask our staff)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="elig-cta">
+      <p>Not sure? Our staff will walk you through it.</p>
+      <a href="pages/register.html" class="btn-primary">Check & Register →</a>
+    </div>
+  </section>
+  <section class="section section-sand" id="stories">
+    <div class="section-header">
+      <span class="section-tag">Real Stories</span>
+      <h2>From Donors &<br/><em>Recipients</em></h2>
+    </div>
+    <div class="testimonials">
+      <div class="testimonial"><p class="quote">"I've been donating for 12 years. Last year I learned my blood went to a child in our city's hospital. That call changed everything for me."</p><div class="testimonial-author"><div class="avatar" style="background:#C8102E">M</div><div><strong>Marcus T.</strong><span>Donor — 47 donations</span></div></div></div>
+      <div class="testimonial testimonial-center"><p class="quote">"After my car accident, I needed 18 units of blood. I don't know who those donors were, but I owe them my life. Now I donate every chance I get."</p><div class="testimonial-author"><div class="avatar" style="background:#8B0000">S</div><div><strong>Sofia R.</strong><span>Recipient turned Donor</span></div></div></div>
+      <div class="testimonial"><p class="quote">"My daughter has leukemia. She needs transfusions monthly. Every donor out there — thank you. You are keeping my child alive."</p><div class="testimonial-author"><div class="avatar" style="background:#FF3B5C">J</div><div><strong>James K.</strong><span>Father of a recipient</span></div></div></div>
+    </div>
+  </section>
+  <section class="cta-section">
+    <div class="cta-inner">
+      <h2>Ready to Save<br/><em>a Life Today?</em></h2>
+      <p>Schedule your appointment in under 2 minutes. Walk-ins always welcome.</p>
+      <div class="cta-actions">
+        <a href="pages/register.html" class="btn-primary btn-large">Schedule Appointment →</a>
+        <a href="pages/find-center.html" class="btn-ghost">Find Nearest Center</a>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">Life<span>Flow</span></div>
+        <p>Connecting donors to those in need, one drop at a time.</p>
+        <div class="socials"><a href="#">f</a><a href="#">𝕏</a><a href="#">◎</a></div>
+      </div>
+      <div class="footer-col"><h4>Donate</h4><ul><li><a href="pages/register.html">Register to Donate</a></li><li><a href="pages/find-center.html">Find a Center</a></li><li><a href="pages/blood-stock.html">Blood Stock</a></li><li><a href="#eligibility">Eligibility</a></li></ul></div>
+      <div class="footer-col"><h4>Patients</h4><ul><li><a href="pages/request-blood.html">Request Blood</a></li><li><a href="pages/login.html">Donor Login</a></li><li><a href="pages/faq.html">FAQ</a></li><li><a href="#stories">Donor Stories</a></li></ul></div>
+      <div class="footer-col"><h4>Contact</h4><ul><li><a href="mailto:info@lifeflow.org">info@lifeflow.org</a></li><li><a href="tel:+18005551234">1-800-555-1234</a></li><li>Available 24/7</li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 LifeFlow Blood Donation. All rights reserved.</p>
+      <div class="footer-links"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>
