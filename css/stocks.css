@@ -1,0 +1,110 @@
+/* ==========================================
+   LifeFlow — Blood Stock Tracker Styles
+   ========================================== */
+
+.last-updated { font-size: 0.82rem; color: var(--warm-gray); margin-top: 0.8rem; }
+
+.stock-alert { background: #fff3cd; border-left: 4px solid #C8102E; padding: 1rem 4rem; }
+.alert-inner { display: flex; align-items: center; gap: 1rem; max-width: 900px; margin: 0 auto; }
+.alert-icon { font-size: 1.3rem; flex-shrink: 0; }
+.alert-inner p { flex: 1; font-size: 0.95rem; color: #7a3c00; }
+.alert-inner .urgency-link { color: var(--red); border-color: var(--red); white-space: nowrap; }
+
+.stock-section { padding-bottom: 2rem; }
+
+.stock-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem; max-width: 1100px; margin: 0 auto 3rem;
+}
+
+.stock-card {
+  background: white; border-radius: 16px; border: 2px solid var(--border);
+  padding: 1.8rem; text-align: center; position: relative; overflow: hidden;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+.stock-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.1); }
+
+.stock-card::before {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 4px;
+}
+.stock-card.critical::before { background: #C8102E; }
+.stock-card.low::before { background: #FF8C00; }
+.stock-card.adequate::before { background: #F0C040; }
+.stock-card.good::before { background: #28A745; }
+
+.stock-card.critical { border-color: rgba(200,16,46,0.25); background: rgba(200,16,46,0.03); }
+.stock-card.low { border-color: rgba(255,140,0,0.25); background: rgba(255,140,0,0.03); }
+
+.blood-type-label {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.8rem; font-weight: 900; line-height: 1; margin-bottom: 0.3rem;
+}
+.stock-card.critical .blood-type-label { color: var(--red); }
+.stock-card.low .blood-type-label { color: #FF8C00; }
+.stock-card.adequate .blood-type-label { color: #C8A000; }
+.stock-card.good .blood-type-label { color: #28A745; }
+
+.stock-days { font-size: 0.82rem; color: var(--warm-gray); margin-bottom: 1rem; }
+.stock-days strong { color: var(--charcoal); font-size: 1.1rem; }
+
+.stock-bar-wrap { height: 8px; background: #EEE8E2; border-radius: 4px; overflow: hidden; margin-bottom: 0.8rem; }
+.stock-bar { height: 100%; border-radius: 4px; transition: width 1s ease; }
+.stock-card.critical .stock-bar { background: var(--red); }
+.stock-card.low .stock-bar { background: #FF8C00; }
+.stock-card.adequate .stock-bar { background: #F0C040; }
+.stock-card.good .stock-bar { background: #28A745; }
+
+.stock-status {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.25rem 0.7rem; border-radius: 50px; display: inline-block;
+}
+.stock-card.critical .stock-status { background: rgba(200,16,46,0.1); color: var(--red); }
+.stock-card.low .stock-status { background: rgba(255,140,0,0.1); color: #FF8C00; }
+.stock-card.adequate .stock-status { background: rgba(240,192,64,0.15); color: #8a6f00; }
+.stock-card.good .stock-status { background: rgba(40,167,69,0.1); color: #28A745; }
+
+.stock-card .donate-link { display: block; margin-top: 0.8rem; font-size: 0.78rem; color: var(--red); font-weight: 600; text-decoration: none; }
+.stock-card .donate-link:hover { text-decoration: underline; }
+
+.stock-legend { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; margin-top: 1rem; }
+.legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--warm-gray); }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+.legend-dot.critical { background: var(--red); }
+.legend-dot.low { background: #FF8C00; }
+.legend-dot.adequate { background: #F0C040; }
+.legend-dot.good { background: #28A745; }
+
+.center-stock-table-wrap {
+  overflow-x: auto; max-width: 1100px; margin: 0 auto;
+  border-radius: 12px; box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+}
+.center-stock-table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; }
+.center-stock-table th {
+  background: var(--charcoal); color: white; padding: 0.9rem 1rem;
+  font-size: 0.82rem; text-align: center; font-weight: 600; letter-spacing: 0.04em;
+}
+.center-stock-table th:first-child { text-align: left; }
+.center-stock-table td { padding: 0.85rem 1rem; font-size: 0.88rem; text-align: center; border-bottom: 1px solid var(--border); }
+.center-stock-table td:first-child { font-weight: 600; text-align: left; }
+.center-stock-table tr:last-child td { border-bottom: none; }
+.center-stock-table tr:hover td { background: var(--cream); }
+
+.cell-critical { color: var(--red); font-weight: 700; }
+.cell-low { color: #FF8C00; font-weight: 700; }
+.cell-adequate { color: #8a6f00; }
+.cell-good { color: #28A745; }
+
+.chart-wrap {
+  max-width: 900px; margin: 0 auto; background: white;
+  border-radius: 16px; padding: 2rem; border: 1px solid var(--border);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+@media (max-width: 900px) {
+  .stock-grid { grid-template-columns: repeat(2, 1fr); }
+  .stock-alert { padding: 1rem 1.5rem; }
+  .alert-inner { flex-direction: column; text-align: center; }
+}
+@media (max-width: 500px) {
+  .stock-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+}
