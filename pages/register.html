@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register to Donate — LifeFlow</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link rel="stylesheet" href="../css/pages.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+</head>
+<body>
+  <nav id="navbar">
+    <a href="../index.html" class="nav-logo">Life<span>Flow</span></a>
+    <ul class="nav-links">
+      <li><a href="../index.html#why">Why Donate</a></li>
+      <li><a href="../index.html#eligibility">Eligibility</a></li>
+      <li><a href="find-center.html">Find Center</a></li>
+      <li><a href="blood-stock.html">Blood Stock</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+    </ul>
+    <a href="register.html" class="nav-cta">Donate Now</a>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="../index.html#why">Why Donate</a></li>
+      <li><a href="find-center.html">Find Center</a></li>
+      <li><a href="blood-stock.html">Blood Stock</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="register.html" class="mobile-cta">Donate Now</a></li>
+    </ul>
+  </div>
+  <main class="page-hero">
+    <div class="page-hero-content">
+      <span class="section-tag">Sign Up</span>
+      <h1>Schedule Your<br/><em>Donation</em></h1>
+      <p>Fill out the form below and we'll confirm your appointment within 24 hours.</p>
+    </div>
+  </main>
+  <section class="form-section">
+    <div class="form-wrap">
+      <form id="donateForm" class="donate-form" novalidate>
+        <div class="form-group-row">
+          <div class="form-group">
+            <label for="firstName">First Name *</label>
+            <input type="text" id="firstName" name="firstName" placeholder="Jane" required/>
+            <span class="error-msg">Please enter your first name.</span>
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name *</label>
+            <input type="text" id="lastName" name="lastName" placeholder="Doe" required/>
+            <span class="error-msg">Please enter your last name.</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address *</label>
+          <input type="email" id="email" name="email" placeholder="jane@example.com" required/>
+          <span class="error-msg">Please enter a valid email.</span>
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" placeholder="+1 (555) 000-0000"/>
+        </div>
+        <div class="form-group-row">
+          <div class="form-group">
+            <label for="dob">Date of Birth *</label>
+            <input type="date" id="dob" name="dob" required/>
+            <span class="error-msg">Please enter your date of birth.</span>
+          </div>
+          <div class="form-group">
+            <label for="bloodType">Blood Type (if known)</label>
+            <select id="bloodType" name="bloodType">
+              <option value="">— Select —</option>
+              <option>A+</option><option>A-</option>
+              <option>B+</option><option>B-</option>
+              <option>AB+</option><option>AB-</option>
+              <option>O+</option><option>O-</option>
+              <option>Unknown</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="center">Preferred Donation Center *</label>
+          <select id="center" name="center" required>
+            <option value="">— Choose a center —</option>
+            <option>Downtown Medical Center</option>
+            <option>Westside Community Clinic</option>
+            <option>Northpark Hospital</option>
+            <option>East End Health Hub</option>
+            <option>Mobile Blood Drive Unit</option>
+          </select>
+          <span class="error-msg">Please select a center.</span>
+        </div>
+        <div class="form-group">
+          <label for="date">Preferred Date *</label>
+          <input type="date" id="date" name="date" required/>
+          <span class="error-msg">Please select a date.</span>
+        </div>
+        <div class="form-group">
+          <label for="time">Preferred Time</label>
+          <select id="time" name="time">
+            <option value="">— Any time —</option>
+            <option>8:00 AM – 10:00 AM</option>
+            <option>10:00 AM – 12:00 PM</option>
+            <option>12:00 PM – 2:00 PM</option>
+            <option>2:00 PM – 4:00 PM</option>
+            <option>4:00 PM – 6:00 PM</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Have you donated blood before?</label>
+          <div class="radio-group">
+            <label class="radio-label"><input type="radio" name="donated" value="yes"/> Yes</label>
+            <label class="radio-label"><input type="radio" name="donated" value="no" checked/> No, first time</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="agree" required/>
+            <span>I confirm I have read the <a href="#eligibility">eligibility criteria</a> and believe I am eligible to donate. *</span>
+          </label>
+          <span class="error-msg">You must confirm eligibility.</span>
+        </div>
+        <button type="submit" class="btn-primary btn-submit">Confirm Appointment →</button>
+      </form>
+      <div class="form-success" id="formSuccess" style="display:none">
+        <div class="success-icon">🩸</div>
+        <h2>You're Registered!</h2>
+        <p>Thank you! We'll send a confirmation to your email within 24 hours. Remember to stay hydrated and eat before your donation.</p>
+        <a href="../index.html" class="btn-primary">Back to Home →</a>
+      </div>
+    </div>
+    <div class="form-aside">
+      <div class="aside-card">
+        <h3>What to Bring</h3>
+        <ul>
+          <li>📄 Valid government-issued ID</li>
+          <li>💧 Be well-hydrated</li>
+          <li>🍽 Eat a healthy meal beforehand</li>
+          <li>😴 Get a good night's sleep</li>
+        </ul>
+      </div>
+      <div class="aside-card aside-card-red">
+        <h3>Urgent Need</h3>
+        <p>O-negative blood is critically low. If you're O-, your donation today will go directly to emergency patients.</p>
+      </div>
+      <div class="aside-card">
+        <h3>Questions?</h3>
+        <p>Call us anytime:<br/><a href="tel:+18005551234"><strong>1-800-555-1234</strong></a></p>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">Life<span>Flow</span></div>
+        <p>Connecting donors to those in need, one drop at a time.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="find-center.html">Find a Center</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:info@lifeflow.org">info@lifeflow.org</a></li>
+          <li><a href="tel:+18005551234">1-800-555-1234</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 LifeFlow Blood Donation. All rights reserved.</p>
+    </div>
+  </footer>
+  <script src="../js/main.js"></script>
+  <script src="../js/form.js"></script>
+</body>
+</html>
