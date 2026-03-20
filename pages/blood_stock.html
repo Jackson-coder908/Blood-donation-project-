@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Blood Stock Tracker — LifeFlow</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link rel="stylesheet" href="../css/pages.css"/>
+  <link rel="stylesheet" href="../css/stock.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+</head>
+<body>
+  <nav id="navbar">
+    <a href="../index.html" class="nav-logo">Life<span>Flow</span></a>
+    <ul class="nav-links">
+      <li><a href="../index.html#why">Why Donate</a></li>
+      <li><a href="../index.html#eligibility">Eligibility</a></li>
+      <li><a href="find-center.html">Find Center</a></li>
+      <li><a href="blood-stock.html">Blood Stock</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+    </ul>
+    <a href="register.html" class="nav-cta">Donate Now</a>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="../index.html#why">Why Donate</a></li>
+      <li><a href="find-center.html">Find Center</a></li>
+      <li><a href="blood-stock.html">Blood Stock</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="register.html" class="mobile-cta">Donate Now</a></li>
+    </ul>
+  </div>
+  <main class="page-hero">
+    <div class="page-hero-content">
+      <span class="section-tag">Live Inventory</span>
+      <h1>Blood Stock<br/><em>Tracker</em></h1>
+      <p>Real-time blood supply levels across all LifeFlow centers. Updated every 30 minutes.</p>
+      <div class="last-updated">🕐 Last updated: <span id="lastUpdated"></span></div>
+    </div>
+  </main>
+  <div class="stock-alert" id="stockAlert">
+    <div class="alert-inner">
+      <span class="alert-icon">⚠️</span>
+      <p><strong>Critical Alert:</strong> O-negative and B-negative supplies are critically low. Donations of these types are urgently needed.</p>
+      <a href="register.html" class="urgency-link">Donate Now →</a>
+    </div>
+  </div>
+  <section class="section stock-section">
+    <div class="section-header">
+      <span class="section-tag">All Blood Types</span>
+      <h2>Current <em>Inventory</em> Levels</h2>
+      <p>Stock levels indicate days of supply remaining at current usage rates.</p>
+    </div>
+    <div class="stock-grid" id="stockGrid"></div>
+    <div class="stock-legend">
+      <div class="legend-item"><span class="legend-dot critical"></span> Critical (0–2 days)</div>
+      <div class="legend-item"><span class="legend-dot low"></span> Low (3–5 days)</div>
+      <div class="legend-item"><span class="legend-dot adequate"></span> Adequate (6–9 days)</div>
+      <div class="legend-item"><span class="legend-dot good"></span> Good (10+ days)</div>
+    </div>
+  </section>
+  <section class="section section-sand">
+    <div class="section-header">
+      <span class="section-tag">By Location</span>
+      <h2>Stock by <em>Center</em></h2>
+    </div>
+    <div class="center-stock-table-wrap">
+      <table class="center-stock-table" id="centerTable">
+        <thead>
+          <tr>
+            <th>Center</th>
+            <th>A+</th><th>A-</th>
+            <th>B+</th><th>B-</th>
+            <th>AB+</th><th>AB-</th>
+            <th>O+</th><th>O-</th>
+          </tr>
+        </thead>
+        <tbody id="centerTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+  <section class="section">
+    <div class="section-header">
+      <span class="section-tag">7-Day Trend</span>
+      <h2>Donation <em>Activity</em></h2>
+      <p>Units donated per day across all centers this week.</p>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="trendChart"></canvas>
+    </div>
+  </section>
+  <section class="cta-section">
+    <div class="cta-inner">
+      <h2>See a Critical<br/><em>Shortage?</em></h2>
+      <p>Your donation today directly replenishes these supplies.</p>
+      <div class="cta-actions">
+        <a href="register.html" class="btn-primary btn-large" style="background:white;color:var(--red);">Donate Now →</a>
+        <a href="request-blood.html" class="btn-ghost">Request Blood</a>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">Life<span>Flow</span></div>
+        <p>Connecting donors to those in need, one drop at a time.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="register.html">Donate Now</a></li>
+          <li><a href="request-blood.html">Request Blood</a></li>
+          <li><a href="login.html">Donor Login</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 LifeFlow Blood Donation. All rights reserved.</p>
+    </div>
+  </footer>
+  <script src="../js/main.js"></script>
+  <script src="../js/stock.js"></script>
+</body>
+</html>
