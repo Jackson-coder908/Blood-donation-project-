@@ -1,1 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Find a Center — LifeFlow</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link rel="stylesheet" href="../css/pages.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+</head>
+<body>
+  <nav id="navbar">
+    <a href="../index.html" class="nav-logo">Life<span>Flow</span></a>
+    <ul class="nav-links">
+      <li><a href="../index.html#why">Why Donate</a></li>
+      <li><a href="../index.html#eligibility">Eligibility</a></li>
+      <li><a href="find-center.html">Find Center</a></li>
+      <li><a href="blood-stock.html">Blood Stock</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+    </ul>
+    <a href="register.html" class="nav-cta">Donate Now</a>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="../index.html#why">Why Donate</a></li>
+      <li><a href="find-center.html">Find Center</a></li>
+      <li><a href="blood-stock.html">Blood Stock</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="register.html" class="mobile-cta">Donate Now</a></li>
+    </ul>
+  </div>
 
+  <main class="page-hero">
+    <div class="page-hero-content">
+      <span class="section-tag">Locations</span>
+      <h1>Find a Donation<br/><em>Center Near You</em></h1>
+      <p>We have centers across the world. Walk-ins are always welcome.</p>
+    </div>
+  </main>
+
+  <section class="section" style="padding-top: 2rem;">
+
+    <!-- COUNTRY SELECTOR -->
+    <div class="country-selector">
+      <select id="countrySelect" onchange="filterByCountry()">
+        <option value="india">🇮🇳 India</option>
+        <option value="usa">🇺🇸 United States</option>
+        <option value="uk">🇬🇧 United Kingdom</option>
+        <option value="canada">🇨🇦 Canada</option>
+        <option value="australia">🇦🇺 Australia</option>
+      </select>
+    </div>
+
+    <!-- MAP -->
+    <div id="map" style="height:420px; border-radius:16px; margin-bottom:2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1);"></div>
+
+    <!-- SEARCH -->
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search by city or center name..."/>
+      <button onclick="filterCenters()">Search</button>
+    </div>
+
+    <!-- CENTERS GRID -->
+    <div class="centers-grid" id="centersGrid">
+
+      <!-- INDIA -->
+      <div class="center-card india" data-name="AIIMS Blood Bank" data-city="Delhi">
+        <div class="center-badge urgent">Urgent Need</div>
+        <h3>AIIMS Blood Bank</h3>
+        <p class="center-address">📍 Ansari Nagar, New Delhi</p>
+        <div class="center-hours"><span>🕐 Mon–Sat: 8am – 5pm</span></div>
+        <div class="center-types">
+          <span class="type-badge">Whole Blood</span>
+          <span class="type-badge">Platelets</span>
+          <span class="type-badge">Plasma</span>
+        </div>
+        <a href="register.html" class="btn-primary" style="margin-top:1rem;display:inline-block;padding:0.65rem 1.5rem;font-size:0.9rem;">Book Appointment →</a>
+      </div>
+
+      <div class="center-card india" data-name="Rotary Blood Bank" data-city="Delhi">
+        <h3>Rotary Blood Bank Delhi</h3>
+        <p class="center-address">📍 Tughlakabad, New Delhi</p>
+        <div class="center-hours"><span>🕐 Daily: 8am – 8pm</span></div>
+        <div class="center-types">
+          <span class="type-badge">Whole Blood</span>
+          <span class="type-badge">Plasma</span>
+        </div>
+        <a href="register.html" class="btn-primary" style="margin-top:1rem;display:inline-block;padding:0.65rem 1.5rem;font-size:0.9rem;">Book Appointment →</a>
+      </div>
+
+      <div class="center-card india" data-name="KEM Hospital Blood Bank" data-city="Mumbai">
+        <h3>KEM Hospital Blood Bank</h3>
+        <p class="center-address">📍 Acharya Donde Marg, Mumbai</p>
+        <div class="center-hours"><span>🕐 Daily: 9am – 5pm</span></div>
+        <div class="center-types">
+          <span class="type-badge">Whole Blood</span>
+          <span class="type-badge">Platelets</span>
+        </div>
+        <a href="register.html" class="btn-primary" style="margin-top:1rem;display:inline-block;padding:0.65rem 1.5rem;font-size:0.9rem;">Book Appointment →</a>
+      </div>
+
+      <div class="center-card india" data-name="GMC Kottayam Blood Bank" data-city="Kottayam">
+        <div class="center-badge">Open Today</div>
+        <h3>GMC Kottayam Blood Bank</h3>
+        <p class="center-address">📍 Gandhinagar, Kottayam, Kerala</p>
+        <div class="center-hours"><span>🕐 Mon–Sat: 8am – 5pm</span></div>
+        <div class="center-types">
+          <span class="type-badge">Whole Blood</span>
+          <span class="type-badge">Platelets</span>
+          <span class="type-badge">Plasma</span>
+        </div>
+        <a href="register.html" class="btn-primary" style="margin-top:1rem;display:inline-block;padding:0.65rem 1.5rem;font-size:0.9rem;">Book Appointment →</a>
+      </div>
+
+      <div class="center-card india" data-name="Apollo Hospital Blood Bank" data-city="Chennai">
+        <h3>Apollo Hospital Blood Bank</h3>
+        <p class="center-address">📍 Greams Rd, Chennai</p>
+        <div class="center-hours"><span>🕐 Daily: 24 hours</span></div>
+        <div class="center-types">
+          <span class="type-badge">Whole Blood</span>
+          <span class="type-badge">Plasma</span>
+          <span class="type-badge">Double Red</span>
+        </div>
+        <a href="register.html" class="btn-primary" style="margin-top:1rem;display:inline-block;padding:0.65rem 1.5rem;font-size:0.9rem;">Book Appointment →</a>
+      </div>
+
+      <div class="center-card india" data-name="CMC Vellore Blood Bank" data-city="Vellore">
+        <h3>CMC Vellore Blood Bank</h3>
+        <p class="center-address">📍 Ida Scudder Rd, Vellore</p>
+        <div class="center-hours"><span>🕐 Daily: 8am – 8pm</span></div>
+        <div class="center-types">
+          <span class="type-badge">Whole Blood</span>
+          <span class="type-badge">Platelets</span>
+        </div>
+        <a href="register.html" class="btn-primary" style="margin-top:1rem;display:inline-block;padding:0.65rem 1.5rem;font-size:0.9rem;">Book Appointment →</a>
+      </div>
+
+      <!-- USA -->
+      <div class="center-card usa" data-name="Downtown Medical Center" data-city="New York" style="display:none">
+        <div class="center-badge urgent">Urgent Need</div>
+        <h3>Downtown Medical Center</h3>
+        <p class="center-address">📍 145 West 57th St, New York</p>
+        <div class="center-hours"><span>🕐 Mon–Fri: 8am – 7pm</span></div>
+        <div class="center-types">
+          <span class="type-badge">Whole Blood</span>
+          <span class="type-badge">Platelets</span>
+        </div>
+        <a href="register.html" class="btn-primary" style="margin-top:1rem;display:inline-block;padding:0.65rem 1.5rem;font-size:0.9rem;">Book Appointment →</a>
+      </div>
+
+      <div class="center-card usa" data-name="Westside Community Clinic" data-city="Los Angeles" style="display:none">
+        <h3>Westside Community Clinic</h3>
+        <p class="center-address">📍 8820 Wilshire Blvd, Los Angeles</p>
+        <div class="center-hours"><span>🕐 Mon–Sat: 9am – 6pm</span></div>
+        <div class="center-types">
+          <span class="type-badge">Whole Blood</span>
+          <span class="type-badge">Plasma</span>
+        </div>
+        <a href="register.html" class="btn-primary" style="margin-top:1rem;display:inline-block;padding:0.65rem 1.5rem;font-size:0.9rem;">Book Appointment →</a>
+      </div>
+
+      <div class="center-card usa" data-name="Northpark Hospital Blood Bank" data-city="Chicago" style="display:none">
+        <h3>Northpark Hospital Blood Bank</h3>
+        <p class="center-address">📍 3200 N Lake Shore Dr, Chicago</p>
+        <div class="center-hours"><span>🕐 Daily: 7am – 8pm</span></div>
+        <div class="center-types">
+          <span class="type-badge">Whole Blood</span>
+          <span class="type-badge">Platelets</span>
+        </div>
+        <a href="register.html" class="btn-primary" style="margin-top:1rem;display:inline-block;padding:0.65rem 1.5rem;font-size:0.9rem;">Book Appointment →</a>
+      </div>
+
+      <!-- UK -->
+      <div class="center-card uk" data-name="NHS Blood Donor Centre" data-city="London" style="display:none">
+        <h3>NHS Blood Donor Centre</h3>
+        <p class="center-address">📍 500 North Bristol Trust, London</p>
+        <div class="center-hours"><span>🕐 Mon–Fri: 9am – 5pm</span></div>
+        <div class="center-types">
+          <span class="type-badge">Whole Blood</span>
+          <span class="type-badge">Platelets</span>
+        </div>
+        <a href="register.html" class="btn-primary" style="margin-top:1rem;display:inline-block;padding:0.65rem 1.5rem;font-size:0.9rem;">Book Appointment →</a>
+      </div>
+
+      <div class="center-card uk" data-name="Manchester Blood Donor Centre" data-city="Manchester" style="display:none">
+        <h3>Manchester Blood Donor Centre</h3>
+        <p class="center-address">📍 Plymouth Grove, Manchester</p>
+        <div class="center-hours"><span>🕐 Mon–Sat: 8am – 6pm</span></div>
+        <div class="center-types">
+          <span class="type-badge">Whole Blood</span>
+          <span class="type-badge">Plasma</span>
+        </div>
+        <a href="register.html" class="btn-primary" style="margin-top:1rem;display:inline-block;padding:0.65rem 1.5rem;font-size:0.9rem;">Book Appointment →</a>
+      </div>
+
+      <!-- CANADA -->
+      <div class="center-card canada" data-name="Canadian Blood Services" data-city="Toronto" style="display:none">
+        <h3>Canadian Blood Services</h3>
+        <p class="center-address">📍 67 College St, Toronto</p>
+        <div class="center-hours"><span>🕐 Mon–Sat: 8am – 6pm</span></div>
+        <div class="center-types">
+          <span class="type-badge">Whole Blood</span>
+          <span class="type-badge">Platelets</span>
+        </div>
+        <a href="register.html" class="btn-primary" style="margin-top:1rem;display:inline-block;padding:0.65rem 1.5rem;font-size:0.9rem;">Book Appointment →</a>
+      </div>
+
+      <div class="center-card canada" data-name="Hema Quebec" data-city="Montreal" style="display:none">
+        <h3>Héma-Québec Montreal</h3>
+        <p class="center-address">📍 4045 Côte-Vertu, Montreal</p>
+        <div class="center-hours"><span>🕐 Daily: 9am – 5pm</span></div>
+        <div class="center-types">
+          <span class="type-badge">Whole Blood</span>
+          <span class="type-badge">Plasma</span>
+        </div>
+        <a href="register.html" class="btn-primary" style="margin-top:1rem;display:inline-block;padding:0.65rem 1.5rem;font-size:0.9rem;">Book Appointment →</a>
+      </div>
+
+      <!-- AUSTRALIA -->
+      <div class="center-card australia" data-name="Australian Red Cross Sydney" data-city="Sydney" style="display:none">
+        <h3>Australian Red Cross Sydney</h3>
+        <p class="center-address">📍 17 O'Riordan St, Sydney</p>
+        <div class="center-hours"><span>🕐 Mon–Sat: 8am – 6pm</span></div>
+        <div class="center-types">
+          <span class="type-badge">Whole Blood</span>
+          <span class="type-badge">Platelets</span>
+        </div>
+        <a href="register.html" class="btn-primary" style="margin-top:1rem;display:inline-block;padding:0.65rem 1.5rem;font-size:0.9rem;">Book Appointment →</a>
+      </div>
+
+      <div class="center-card australia" data-name="Lifeblood Melbourne" data-city="Melbourne" style="display:none">
+        <h3>Lifeblood Melbourne</h3>
+        <p class="center-address">📍 30 Wurundjeri Way, Melbourne</p>
+        <div class="center-hours"><span>🕐 Daily: 8am – 6pm</span></div>
+        <div class="center-types">
+          <span class="type-badge">Whole Blood</span>
+          <span class="type-badge">Plasma</span>
+        </div>
+        <a href="register.html" class="btn-primary" style="margin-top:1rem;display:inline-block;padding:0.65rem 1.5rem;font-size:0.9rem;">Book Appointment →</a>
+      </div>
+
+    </div>
+
+    <p id="noResults" style="display:none;text-align:center;color:var(--warm-gray);padding:2rem;">No centers found.</p>
+  </section>
+
+  <section class="cta-section">
+    <div class="cta-inner">
+      <h2>Don't See Your<br/><em>City?</em></h2>
+      <p>We're expanding! Call us and we'll find the nearest center to you.</p>
+      <div class="cta-actions">
+        <a href="tel:+18005551234" class="btn-primary btn-large" style="background:white;color:var(--red);">Call 1-800-555-1234</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">Life<span>Flow</span></div>
+        <p>Connecting donors to those in need, one drop at a time.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="register.html">Donate Now</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 LifeFlow Blood Donation. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // MAP SETUP
+    const map = L.map('map').setView([20.5937, 78.9629], 5);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    const redIcon = L.icon({
+      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+      iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34],
+    });
+
+    const allCamps = {
+      india: {
+        view: [20.5937, 78.9629], zoom: 5,
+        camps: [
+          { name: "AIIMS Blood Bank", lat: 28.5672, lng: 77.2100, address: "Ansari Nagar, New Delhi", hours: "Mon–Sat: 8am–5pm" },
+          { name: "Rotary Blood Bank Delhi", lat: 28.6304, lng: 77.2177, address: "Tughlakabad, New Delhi", hours: "Daily: 8am–8pm" },
+          { name: "KEM Hospital Mumbai", lat: 19.0017, lng: 72.8416, address: "Acharya Donde Marg, Mumbai", hours: "Daily: 9am–5pm" },
+          { name: "GMC Kottayam Blood Bank", lat: 9.5916, lng: 76.5222, address: "Gandhinagar, Kottayam", hours: "Mon–Sat: 8am–5pm" },
+          { name: "Apollo Hospital Chennai", lat: 13.0569, lng: 80.2425, address: "Greams Rd, Chennai", hours: "Daily: 24 hours" },
+          { name: "CMC Vellore Blood Bank", lat: 12.9246, lng: 79.1353, address: "Ida Scudder Rd, Vellore", hours: "Daily: 8am–8pm" },
+        ]
+      },
+      usa: {
+        view: [37.0902, -95.7129], zoom: 4,
+        camps: [
+          { name: "Downtown Medical Center", lat: 40.7648, lng: -73.9808, address: "145 West 57th St, New York", hours: "Mon–Fri: 8am–7pm" },
+          { name: "Westside Community Clinic", lat: 34.0736, lng: -118.3993, address: "8820 Wilshire Blvd, Los Angeles", hours: "Mon–Sat: 9am–6pm" },
+          { name: "Northpark Hospital", lat: 41.9305, lng: -87.6390, address: "3200 N Lake Shore Dr, Chicago", hours: "Daily: 7am–8pm" },
+        ]
+      },
+      uk: {
+        view: [55.3781, -3.4360], zoom: 6,
+        camps: [
+          { name: "NHS Blood Donor Centre London", lat: 51.5194, lng: -0.1270, address: "500 North Bristol Trust, London", hours: "Mon–Fri: 9am–5pm" },
+          { name: "Manchester Blood Donor Centre", lat: 53.4808, lng: -2.2426, address: "Plymouth Grove, Manchester", hours: "Mon–Sat: 8am–6pm" },
+        ]
+      },
+      canada: {
+        view: [56.1304, -106.3468], zoom: 4,
+        camps: [
+          { name: "Canadian Blood Services Toronto", lat: 43.6532, lng: -79.3832, address: "67 College St, Toronto", hours: "Mon–Sat: 8am–6pm" },
+          { name: "Héma-Québec Montreal", lat: 45.5017, lng: -73.5673, address: "4045 Côte-Vertu, Montreal", hours: "Daily: 9am–5pm" },
+        ]
+      },
+      australia: {
+        view: [-25.2744, 133.7751], zoom: 4,
+        camps: [
+          { name: "Australian Red Cross Sydney", lat: -33.8688, lng: 151.2093, address: "17 O'Riordan St, Sydney", hours: "Mon–Sat: 8am–6pm" },
+          { name: "Lifeblood Melbourne", lat: -37.8136, lng: 144.9631, address: "30 Wurundjeri Way, Melbourne", hours: "Daily: 8am–6pm" },
+        ]
+      }
+    };
+
+    let currentMarkers = [];
+
+    function clearMarkers() {
+      currentMarkers.forEach(m => map.removeLayer(m));
+      currentMarkers = [];
+    }
+
+    function loadCamps(country) {
+      clearMarkers();
+      const data = allCamps[country];
+      map.setView(data.view, data.zoom);
+      data.camps.forEach(camp => {
+        const marker = L.marker([camp.lat, camp.lng], { icon: redIcon })
+          .addTo(map)
+          .bindPopup(`
+            <strong style="color:#C8102E">${camp.name}</strong><br/>
+            📍 ${camp.address}<br/>
+            🕐 ${camp.hours}<br/>
+            <a href="register.html" style="color:#C8102E;font-weight:600">Book Appointment →</a>
+          `);
+        currentMarkers.push(marker);
+      });
+
+      // Show/hide cards
+      document.querySelectorAll('.center-card').forEach(card => {
+        card.style.display = card.classList.contains(country) ? '' : 'none';
+      });
+    }
+
+    function filterByCountry() {
+      const country = document.getElementById('countrySelect').value;
+      loadCamps(country);
+    }
+
+    function filterCenters() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const cards = document.querySelectorAll('.center-card:not([style*="display: none"])');
+      let found = 0;
+      cards.forEach(card => {
+        const name = card.dataset.name.toLowerCase();
+        const city = card.dataset.city.toLowerCase();
+        const match = name.includes(query) || city.includes(query) || query === '';
+        card.style.display = match ? '' : 'none';
+        if (match) found++;
+      });
+      document.getElementById('noResults').style.display = found === 0 ? 'block' : 'none';
+    }
+
+    document.getElementById('searchInput').addEventListener('keyup', e => {
+      if (e.key === 'Enter') filterCenters();
+    });
+
+    // Load India by default
+    loadCamps('india');
+
+    // Show user location
+    map.locate({ setView: false });
+    map.on('locationfound', (e) => {
+      L.marker(e.latlng).addTo(map).bindPopup('📍 You are here!').openPopup();
+      L.circle(e.latlng, { radius: e.accuracy, color: '#C8102E', fillOpacity: 0.1 }).addTo(map);
+    });
+  </script>
+</body>
+  </html>
