@@ -147,3 +147,15 @@
   .centers-grid { grid-template-columns: 1fr; }
   .faq-section { padding: 0 1.5rem; }
 }
+.country-selector {
+  display: flex; justify-content: center; margin-bottom: 1.5rem;
+}
+.country-selector select {
+  padding: 0.8rem 2rem; border-radius: 50px;
+  border: 1.5px solid #E0D5CC;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem; cursor: pointer;
+  outline: none; background: white;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+.country-selector select:focus { border-color: var(--red); }
