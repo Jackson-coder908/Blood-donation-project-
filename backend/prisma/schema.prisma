@@ -1,0 +1,16 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Donor {
+  id        Int      @id @default(autoincrement())
+  name      String
+  bloodType String
+  city      String
+  phone     String
+  createdAt DateTime @default(now())
+}
