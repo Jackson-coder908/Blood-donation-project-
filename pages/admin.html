@@ -12,6 +12,8 @@
                 <th>Name</th>
                 <th>Blood Type</th>
                 <th>Center</th>
+                <th>Phone</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -19,20 +21,38 @@
     </table>
 
     <script>
-        // Fetch data from your backend
-        fetch('http://localhost:5000/all-donors')
+    function loadDonors() {
+        fetch('http://localhost:5000/donors')
             .then(res => res.json())
             .then(data => {
                 const tableBody = document.querySelector('#donorTable tbody');
+                tableBody.innerHTML = ''; // Clear table
+                
                 data.forEach(donor => {
                     const row = `<tr>
                         <td>${donor.name}</td>
                         <td>${donor.bloodType}</td>
-                        <td>${donor.center}</td>
+                        <td>${donor.city}</td>
+                        <td>${donor.phone}</td>
+                        <td>
+                            <button onclick="deleteDonor(${donor.id})" style="color:red">Delete</button>
+                        </td>
                     </tr>`;
                     tableBody.innerHTML += row;
                 });
             });
+    }
+
+    function deleteDonor(id) {
+        if(confirm("Are you sure you want to delete this donor?")) {
+            fetch(`http://localhost:5000/donors/${id}`, { method: 'DELETE' })
+                .then(() => loadDonors()); // Refresh the list after deleting
+        }
+    }
+
+    // Load the list when the page opens
+    loadDonors();
+</script>
     </script>
 </body>
 </html>

@@ -1,46 +1,41 @@
-const form = document.getElementById('donateForm');
-const successEl = document.getElementById('formSuccess');
+document.getElementById('donateForm').addEventListener('submit', async (e) => {
+    e.preventDefault(); // This stops the page from refreshing or going to Formspree
 
-if (form) {
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    let valid = true;
+    // 1. Gather the data from your form
+    const firstName = document.getElementById('firstName').value;
+    const lastName = document.getElementById('lastName').value;
+    const fullName = `${firstName} ${lastName}`; // Combine names for the DB
+    const bloodType = document.getElementById('bloodType').value;
+    const city = document.getElementById('city').value; // Matches our updated HTML ID
+    const phone = document.getElementById('phone').value;
 
-    // Clear previous errors
-    form.querySelectorAll('.form-group').forEach(g => g.classList.remove('has-error'));
+    // 2. Create the JSON object to send to the waiter (API)
+    const donorData = {
+        name: fullName,
+        bloodType: bloodType,
+        city: city,
+        phone: phone
+    };
 
-    // Validate required text/email/date inputs
-    form.querySelectorAll('input[required], select[required]').forEach(input => {
-      const group = input.closest('.form-group');
-      if (!input.value.trim()) {
-        group.classList.add('has-error');
-        valid = false;
-      }
-      if (input.type === 'email' && input.value && !input.value.includes('@')) {
-        group.classList.add('has-error');
-        valid = false;
-      }
-      if (input.type === 'checkbox' && !input.checked) {
-        group.classList.add('has-error');
-        valid = false;
-      }
-    });
+    try {
+        // 3. Send the data to your local server
+        const response = await fetch('http://localhost:5000/donors', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(donorData)
+        });
 
-    if (valid) {
-      form.style.display = 'none';
-      successEl.style.display = 'block';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      const firstError = form.querySelector('.has-error');
-      if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (response.ok) {
+            // 4. Show success message if everything went well
+            document.getElementById('donateForm').style.display = 'none';
+            document.getElementById('formSuccess').style.display = 'block';
+        } else {
+            alert("Something went wrong. Please try again.");
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert("Server is not running! Make sure to start index.js.");
     }
-  });
-
-  // Live validation
-  form.querySelectorAll('input, select').forEach(input => {
-    input.addEventListener('input', () => {
-      const group = input.closest('.form-group');
-      if (group) group.classList.remove('has-error');
-    });
-  });
-}
+});
