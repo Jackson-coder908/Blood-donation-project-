@@ -86,18 +86,21 @@
             </select>
           </div>
         </div>
-        <div class="form-group">
-          <label for="center">Preferred Donation Center *</label>
-          <select id="center" name="center" required>
-            <option value="">— Choose a center —</option>
-            <option>Downtown Medical Center</option>
-            <option>Westside Community Clinic</option>
-            <option>Northpark Hospital</option>
-            <option>East End Health Hub</option>
-            <option>Mobile Blood Drive Unit</option>
-          </select>
-          <span class="error-msg">Please select a center.</span>
-        </div>
+        <div class="location-container" style="margin-bottom: 20px;">
+    <label style="display: block; margin-bottom: 10px; font-weight: 600;">Find Your Donation Center</label>
+    
+    <button type="button" id="findNearestBtn" class="btn-primary" style="width: 100%; background: #e74c3c; margin-bottom: 10px;">
+        📍 Find Nearest Camp Automatically
+    </button>
+
+    <div id="selected-camp-display" style="padding: 15px; background: #fdf2f2; border: 1px dashed #e74c3c; border-radius: 8px; text-align: center; color: #333;">
+        Click the button above to locate the nearest camp.
+    </div>
+
+    <div id="map" style="height: 300px; border-radius: 12px; margin-top: 15px; border: 1px solid #ddd;"></div>
+
+    <input type="hidden" id="city" name="city" required>
+</div>
         <div class="form-group">
           <label for="date">Preferred Date *</label>
           <input type="date" id="date" name="date" required/>
