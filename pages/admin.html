@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin - Donor List</title>
+    <link rel="stylesheet" href="../css/pages.css">
+</head>
+<body>
+    <h2>Registered Donors</h2>
+    <table border="1" id="donorTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Blood Type</th>
+                <th>Center</th>
+            </tr>
+        </thead>
+        <tbody>
+            </tbody>
+    </table>
+
+    <script>
+        // Fetch data from your backend
+        fetch('http://localhost:5000/all-donors')
+            .then(res => res.json())
+            .then(data => {
+                const tableBody = document.querySelector('#donorTable tbody');
+                data.forEach(donor => {
+                    const row = `<tr>
+                        <td>${donor.name}</td>
+                        <td>${donor.bloodType}</td>
+                        <td>${donor.center}</td>
+                    </tr>`;
+                    tableBody.innerHTML += row;
+                });
+            });
+    </script>
+</body>
+</html>
