@@ -8,20 +8,24 @@ const PORT = 5000;
 
 const db = new Database(path.join(__dirname, 'donors.db'));
 
+// 1. DATABASE UPDATED: Added age, weight, and lastDonationDate columns
 db.prepare(`
   CREATE TABLE IF NOT EXISTS donors (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
     bloodType TEXT,
     city TEXT,
-    phone TEXT
+    phone TEXT,
+    age INTEGER,
+    weight INTEGER,
+    lastDonationDate TEXT
   )
 `).run();
 
 app.use(cors());
 app.use(express.json());
 
-// --- 1. ADD THIS: Allows the server to find your pages, css, and js folders ---
+// Allows the server to find your pages, css, and js folders
 app.use(express.static(path.join(__dirname, '../'))); 
 
 // Get all donors
@@ -30,17 +34,28 @@ app.get('/donors', (req, res) => {
   res.json(donors);
 });
 
-// Add a new donor
+// 2. REGISTRATION ROUTE UPDATED: Saves eligibility metrics into the database
 app.post('/donors', (req, res) => {
-  const { name, bloodType, city, phone } = req.body;
-  const info = db.prepare(
-    'INSERT INTO donors (name, bloodType, city, phone) VALUES (?, ?, ?, ?)'
-  ).run(name, bloodType, city, phone);
+  const { name, bloodType, city, phone, age, weight, lastDonationDate } = req.body;
   
-  res.json({ id: info.lastInsertRowid, name, bloodType, city, phone });
+  const info = db.prepare(`
+    INSERT INTO donors (name, bloodType, city, phone, age, weight, lastDonationDate) 
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `).run(name, bloodType, city, phone, age, weight, lastDonationDate || "");
+  
+  res.json({ 
+    id: info.lastInsertRowid, 
+    name, 
+    bloodType, 
+    city, 
+    phone, 
+    age, 
+    weight, 
+    lastDonationDate 
+  });
 });
 
-// --- 2. ADD THIS: The Admin "Delete" Route ---
+// The Admin "Delete" Route
 app.delete('/donors/:id', (req, res) => {
   const { id } = req.params;
   db.prepare('DELETE FROM donors WHERE id = ?').run(id);
@@ -51,7 +66,6 @@ app.delete('/donors/:id', (req, res) => {
 app.post('/api/login/donor', (req, res) => {
   const { email, password } = req.body;
   
-  // Simple check for your project demo (Can be swapped with a DB check later)
   if (email === "donor@test.com" && password === "password123") {
     return res.json({ token: "demo-donor-token-abcde", role: "donor" });
   }
@@ -63,7 +77,6 @@ app.post('/api/login/donor', (req, res) => {
 app.post('/api/login/recipient', (req, res) => {
   const { identity, password } = req.body;
   
-  // Checking admin parameters for full-access privileges
   if ((identity === "admin@lifeflow.org" || identity === "admin") && password === "admin123") {
     return res.json({ token: "demo-recipient-token-xyz789", role: "recipient" });
   }

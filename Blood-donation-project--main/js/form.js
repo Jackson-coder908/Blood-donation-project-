@@ -7,7 +7,6 @@ const campData = [
     { name: "General Hospital, Ernakulam", lat: 9.9763, lng: 76.2803 },
     { name: "Medical College, TVM", lat: 8.5241, lng: 76.9272 },
     { name: "Medical College, Kozhikode", lat: 11.2742, lng: 75.8344 }
-    // Tip: Add more hospitals here to cover all areas of Kerala!
 ];
 
 // 2. MAP SETUP: Initialize Leaflet Map
@@ -66,25 +65,69 @@ document.getElementById('findNearestBtn').addEventListener('click', () => {
     });
 });
 
-// 6. SUBMISSION: Send to Backend
+// 6. SUBMISSION & ELIGIBILITY VERIFICATION
 document.getElementById('donateForm').addEventListener('submit', async function(e) {
-    e.preventDefault(); // Stops the page from reloading redirecting away
+    e.preventDefault(); 
 
-    // 1. Combine First Name and Last Name for the backend
+    // --- ELIGIBILITY CHECK 1: Age Evaluation (18 to 65) ---
+    const dobValue = document.getElementById('dob').value;
+    const dobDate = new Date(dobValue);
+    const today = new Date();
+    
+    let age = today.getFullYear() - dobDate.getFullYear();
+    const monthDiff = today.getMonth() - dobDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dobDate.getDate())) {
+        age--;
+    }
+
+    if (age < 18 || age > 65) {
+        alert(`❌ Eligibility Denied: You must be between 18 and 65 years old to donate blood safely. Your calculated age is ${age}.`);
+        return;
+    }
+
+    // --- ELIGIBILITY CHECK 2: Weight Evaluation (Minimum 50kg) ---
+    const weight = parseInt(document.getElementById('weight').value, 10);
+    if (weight < 50) {
+        alert("❌ Eligibility Denied: You must weigh at least 50 kg to donate blood safely.");
+        return;
+    }
+
+    // --- ELIGIBILITY CHECK 3: 90-Day Cooldown Timeline Evaluation ---
+    const isPriorDonor = document.getElementById('donatedYes').checked;
+    let lastDonationDate = "";
+
+    if (isPriorDonor) {
+        lastDonationDate = document.getElementById('lastDonationDate').value;
+        const preferredAppointmentDate = new Date(document.getElementById('date').value);
+        const pastDonationDate = new Date(lastDonationDate);
+
+        // Convert the difference from milliseconds into calendar days
+        const timeDiff = preferredAppointmentDate.getTime() - pastDonationDate.getTime();
+        const daysSinceLastDonation = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+
+        if (daysSinceLastDonation < 90) {
+            alert(`❌ Eligibility Denied: A minimum interval of 90 days is required between blood donations. It has only been ${daysSinceLastDonation} days since your last donation.`);
+            return;
+        }
+    }
+
+    // --- DATA PACKAGING ---
     const firstName = document.getElementById('firstName').value.trim();
     const lastName = document.getElementById('lastName').value.trim();
     const fullName = `${firstName} ${lastName}`;
 
-    // 2. Gather the rest of the form values matching your database keys
     const formData = {
         name: fullName,
         bloodType: document.getElementById('bloodType').value,
-        city: document.getElementById('city').value || "Unknown", // Grabbed from your map locator
-        phone: document.getElementById('phone').value
+        city: document.getElementById('city').value || "Unknown",
+        phone: document.getElementById('phone').value,
+        age: age,
+        weight: weight,
+        lastDonationDate: lastDonationDate
     };
 
     try {
-        // 3. Send data straight to your local better-sqlite3 backend
+        // Send data straight to your updated better-sqlite3 backend
         const response = await fetch('http://localhost:5000/donors', {
             method: 'POST',
             headers: {
@@ -95,9 +138,9 @@ document.getElementById('donateForm').addEventListener('submit', async function(
 
         if (response.ok) {
             const result = await response.json();
-            console.log('Donor saved successfully:', result);
+            console.log('Donor validated and saved successfully:', result);
             
-            // Hide the form and show your clean success message container
+            // Hide the form interface and reveal success panel
             document.getElementById('donateForm').style.display = 'none';
             document.getElementById('formSuccess').style.display = 'block';
         } else {
@@ -106,5 +149,30 @@ document.getElementById('donateForm').addEventListener('submit', async function(
     } catch (error) {
         console.error('Network Error:', error);
         alert('Could not connect to the local server. Is your backend running?');
+    }
+});
+
+// --- ELIGIBILITY CONDITIONAL FORM FIELDS TOGGLE ---
+document.addEventListener('DOMContentLoaded', () => {
+    const donatedYes = document.getElementById('donatedYes');
+    const donatedNo = document.getElementById('donatedNo');
+    const lastDonationGroup = document.getElementById('lastDonationGroup');
+    const lastDonationInput = document.getElementById('lastDonationDate');
+
+    if (donatedYes && donatedNo && lastDonationGroup) {
+        donatedYes.addEventListener('change', () => {
+            if (donatedYes.checked) {
+                lastDonationGroup.style.display = 'block';
+                lastDonationInput.setAttribute('required', 'true');
+            }
+        });
+
+        donatedNo.addEventListener('change', () => {
+            if (donatedNo.checked) {
+                lastDonationGroup.style.display = 'none';
+                lastDonationInput.removeAttribute('required');
+                lastDonationInput.value = ''; 
+            }
+        });
     }
 });
