@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Find a Center — LifeFlow</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link rel="stylesheet" href="../css/pages.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    /* Custom utility animations and classes */
+    .district-carousel::-webkit-scrollbar { display: none; }
+    .district-carousel { -ms-overflow-style: none; scrollbar-width: none; }
+    .badge-card { transition: all 0.25s ease-in-out; }
+    .badge-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(200, 16, 46, 0.15); }
+    .center-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .center-card:hover { transform: translateY(-4px); box-shadow: 0 6px 25px rgba(0,0,0,0.08); }
+    .gateway-card { transition: all 0.3s ease; }
+    .gateway-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+    
+    /* Session UI Animation pulse */
+    .session-badge {
+      display: inline-flex; align-items: center; background: rgba(46, 196, 182, 0.1); 
+      color: #2ec4b6; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700;
+    }
+    .pulse-dot {
+      width: 6px; height: 6px; background: #2ec4b6; border-radius: 50%; margin-right: 8px;
+      animation: pulseGlow 2s infinite;
+    }
+    @keyframes pulseGlow {
+      0% { transform: scale(0.9); opacity: 0.6; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.6; }
+    }
+  </style>
+</head>
+<body>
+  
+  <nav id="navbar">
+    <a href="../index.html" class="nav-logo">Life<span>Flow</span></a>
+    <ul class="nav-links">
+      <li><a href="../index.html#why">Why Donate</a></li>
+      <li><a href="find-center.html">Find Center</a></li>
+      <li><a href="blood-stock.html">Blood Stock</a></li>
+      <li><a href="request-blood.html">Request Blood</a></li>
+      <li><a href="login.html" id="navLoginLink">Donor Login</a></li>
+    </ul>
+    <a href="register.html" id="navCtaButton" class="nav-cta">Donate Now</a>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="../index.html#why">Why Donate</a></li>
+      <li><a href="find-center.html">Find Center</a></li>
+      <li><a href="blood-stock.html">Blood Stock</a></li>
+      <li><a href="request-blood.html">Request Blood</a></li>
+      <li><a href="login.html">Donor Login</a></li>
+      <li><a href="register.html" class="mobile-cta">Donate Now</a></li>
+    </ul>
+  </div>
+
+  <div id="userProfilePanel" style="display: none; background: #fff; border-bottom: 1px solid #eef0f2; padding: 25px 20px; box-shadow: inset 0 -4px 10px rgba(0,0,0,0.01);">
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+      <div style="display: flex; align-items: center; gap: 15px;">
+        <div style="font-size: 2.2rem; background: #f1f2f6; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #C8102E;">👤</div>
+        <div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <h2 style="font-family:'DM Sans'; font-size: 1.3rem; margin: 0; color: #1a1a1a;">Welcome Back, <span id="sessName" style="color:#C8102E;">User</span>!</h2>
+            <span class="session-badge"><span class="pulse-dot"></span>Logged In Profile</span>
+          </div>
+          <p style="margin: 3px 0 0 0; font-size: 0.9rem; color: #666;">
+            Registered Group: <strong id="sessBlood" style="color:#111;">--</strong> &nbsp;|&nbsp; Primary District: <strong id="sessDistrict" style="color:#111;">--</strong>
+          </p>
+        </div>
+      </div>
+      <div>
+        <button onclick="logoutSession()" style="background: #111; color: white; border: none; padding: 10px 20px; border-radius: 20px; font-family:'DM Sans'; font-weight: 600; cursor: pointer; font-size: 0.85rem; transition: background 0.2s;">Log Out Session</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="page-hero" style="padding: 4rem 0 2rem 0;">
+    <div class="page-hero-content">
+      <span class="section-tag">Locations</span>
+      <h1>Network Directory &<br/><em>Live Requests</em></h1>
+      <p>Locate permanent blood banks or step up to assist patients making emergency requests right now in your district.</p>
+    </div>
+  </main>
+
+  <section style="padding: 2rem 20px 0 20px; background: var(--cream-bg, #faf8f5);">
+    <div class="intent-gateway" style="max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+      
+      <div class="gateway-card" style="background: #fff; border: 2px solid #C8102E; border-radius: 16px; padding: 30px; text-align: center; box-shadow: 0 4px 15px rgba(200, 16, 46, 0.04);">
+        <div style="font-size: 2.2rem; margin-bottom: 12px;">❤️</div>
+        <h3 style="font-family: 'DM Sans', sans-serif; font-size: 1.3rem; margin-bottom: 10px; color: #1a1a1a; font-weight: 600;">I Want to Donate Blood</h3>
+        <p style="color: #666; font-size: 0.9rem; margin-bottom: 24px; min-height: 44px; line-height: 1.5;">Check regional requirements below, then reserve an appointment slot at your closest center.</p>
+        <a href="register.html" style="display: block; background: #C8102E; color: white; padding: 12px; border-radius: 25px; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: background 0.2s;">Register as a Donor</a>
+      </div>
+
+      <div class="gateway-card" style="background: #fff; border: 1px solid #eef0f2; border-radius: 16px; padding: 30px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.01);" onmouseover="this.style.borderColor='#C8102E'" onmouseout="this.style.borderColor='#eef0f2'">
+        <div style="font-size: 2.2rem; margin-bottom: 12px;">🚨</div>
+        <h3 style="font-family: 'DM Sans', sans-serif; font-size: 1.3rem; margin-bottom: 10px; color: #1a1a1a; font-weight: 600;">I Need Blood (Emergency)</h3>
+        <p style="color: #666; font-size: 0.9rem; margin-bottom: 24px; min-height: 44px; line-height: 1.5;">Create an immediate, network-wide live emergency request alert for patients in Kerala hospitals.</p>
+        <a href="request-blood.html" style="display: block; background: #fff; color: #C8102E; border: 2px solid #C8102E; padding: 10px; border-radius: 25px; text-decoration: none; font-weight: 600; font-size: 0.95rem; transition: all 0.2s;">Request Urgent Blood</a>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 3rem; max-width: 1200px; margin: 0 auto;">
+
+    <div class="search-container" style="max-width: 600px; margin: 0 auto 2rem auto; display: flex; gap: 10px; padding: 0 15px;">
+      <input type="text" id="searchInput" onkeyup="searchCards()" placeholder="🔍 Search by district, hospital, or blood group (e.g., O+, Kottayam)..." style="width: 100%; padding: 14px 20px; border: 2px solid #f1f2f6; border-radius: 30px; font-family: 'DM Sans', sans-serif; font-size: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.01); outline: none;"/>
+    </div>
+
+    <div class="view-toggle" style="display: flex; justify-content: center; gap: 15px; margin-bottom: 2.5rem; padding: 0 15px;">
+      <button id="toggleCenters" onclick="switchView('centers')" style="background: #C8102E; color: white; border: none; padding: 12px 24px; border-radius: 25px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.3s; box-shadow: 0 4px 12px rgba(200, 16, 46, 0.15);">
+        🏥 Hospital Donation Centers
+      </button>
+      <button id="toggleRecipients" onclick="switchView('recipients')" style="background: #f1f2f6; color: #555; border: none; padding: 12px 24px; border-radius: 25px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.3s;">
+        🚨 Live Recipient Requests
+      </button>
+    </div>
+
+    <div style="text-align: center; margin-bottom: 12px; color: #888; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Filter by District</div>
+    <div class="district-carousel" style="display: flex; gap: 12px; overflow-x: auto; padding: 5px 15px 25px 15px; margin-bottom: 2rem; scroll-behavior: smooth; -webkit-overflow-scrolling: touch;">
+      <button class="badge-card" id="btn-all" onclick="filterDistrict('all', this)" style="background: #C8102E; color: white; border: 1px solid #C8102E; padding: 12px 24px; border-radius: 25px; font-weight: 600; cursor: pointer; white-space: nowrap; font-family: 'DM Sans', sans-serif;">✨ All Kerala</button>
+      <button class="badge-card" id="chip-thiruvananthapuram" onclick="filterDistrict('thiruvananthapuram', this)" style="background: white; color: #333; border: 1px solid #eee; padding: 12px 24px; border-radius: 25px; font-weight: 500; cursor: pointer; white-space: nowrap; font-family: 'DM Sans', sans-serif;">Thiruvananthapuram</button>
+      <button class="badge-card" id="chip-kollam" onclick="filterDistrict('kollam', this)" style="background: white; color: #333; border: 1px solid #eee; padding: 12px 24px; border-radius: 25px; font-weight: 500; cursor: pointer; white-space: nowrap; font-family: 'DM Sans', sans-serif;">Kollam</button>
+      <button class="badge-card" id="chip-alappuzha" onclick="filterDistrict('alappuzha', this)" style="background: white; color: #333; border: 1px solid #eee; padding: 12px 24px; border-radius: 25px; font-weight: 500; cursor: pointer; white-space: nowrap; font-family: 'DM Sans', sans-serif;">Alappuzha</button>
+      <button class="badge-card" id="chip-kottayam" onclick="filterDistrict('kottayam', this)" style="background: white; color: #333; border: 1px solid #eee; padding: 12px 24px; border-radius: 25px; font-weight: 500; cursor: pointer; white-space: nowrap; font-family: 'DM Sans', sans-serif;">Kottayam</button>
+      <button class="badge-card" id="chip-ernakulam" onclick="filterDistrict('ernakulam', this)" style="background: white; color: #333; border: 1px solid #eee; padding: 12px 24px; border-radius: 25px; font-weight: 500; cursor: pointer; white-space: nowrap; font-family: 'DM Sans', sans-serif;">Ernakulam</button>
+      <button class="badge-card" id="chip-thrissur" onclick="filterDistrict('thrissur', this)" style="background: white; color: #333; border: 1px solid #eee; padding: 12px 24px; border-radius: 25px; font-weight: 500; cursor: pointer; white-space: nowrap; font-family: 'DM Sans', sans-serif;">Thrissur</button>
+      <button class="badge-card" id="chip-kozhikode" onclick="filterDistrict('kozhikode', this)" style="background: white; color: #333; border: 1px solid #eee; padding: 12px 24px; border-radius: 25px; font-weight: 500; cursor: pointer; white-space: nowrap; font-family: 'DM Sans', sans-serif;">Kozhikode</button>
+    </div>
+
+    <div id="viewContainer" style="padding: 0 15px;">
+      
+      <div class="centers-grid" id="centersViewGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
+        <div class="center-card" data-district="kottayam">
+          <div class="center-badge">Open Today</div>
+          <h3>Govt. Medical College Blood Bank</h3>
+          <p class="center-address">📍 Gandhinagar, Kottayam, Kerala</p>
+          <div class="center-hours"><span>🕐 Mon–Sat: 8am – 5pm</span></div>
+          <div class="center-types"><span class="type-badge">Whole Blood</span><span class="type-badge">Platelets</span></div>
+          <a href="register.html" class="btn-primary" style="margin-top:1rem;display:inline-block;padding:0.65rem 1.5rem;font-size:0.9rem;">Book Appointment →</a>
+        </div>
+
+        <div class="center-card" data-district="thiruvananthapuram">
+          <div class="center-badge urgent">Urgent Need</div>
+          <h3>Regional Cancer Centre (RCC) Bank</h3>
+          <p class="center-address">📍 Medical College Campus, Thiruvananthapuram</p>
+          <div class="center-hours"><span>🕐 Mon–Sat: 8am – 6pm</span></div>
+          <div class="center-types"><span class="type-badge">Platelets</span><span class="type-badge">Plasma</span></div>
+          <a href="register.html" class="btn-primary" style="margin-top:1rem;display:inline-block;padding:0.65rem 1.5rem;font-size:0.9rem;">Book Appointment →</a>
+        </div>
+
+        <div class="center-card" data-district="ernakulam">
+          <div class="center-badge">Open Today</div>
+          <h3>IMA Blood Bank Complex</h3>
+          <p class="center-address">📍 Kaloor, Ernakulam, Kerala</p>
+          <div class="center-hours"><span>🕐 Daily: 24 Hours</span></div>
+          <div class="center-types"><span class="type-badge">Whole Blood</span></div>
+          <a href="register.html" class="btn-primary" style="margin-top:1rem;display:inline-block;padding:0.65rem 1.5rem;font-size:0.9rem;">Book Appointment →</a>
+        </div>
+      </div>
+
+      <div class="centers-grid" id="recipientsViewGrid" style="display: none; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
+        
+        <div class="center-card" data-district="kottayam" style="border-left: 5px solid #C8102E;">
+          <div class="center-badge urgent" style="background: #ef233c;">🚨 CRITICAL NEED</div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+            <h3 style="margin:0; font-size:1.2rem;">Patient: Rahul V. S.</h3>
+            <span style="background: #C8102E; color: white; font-weight: bold; padding: 4px 10px; border-radius: 6px; font-size: 1rem;">O +ve</span>
+          </div>
+          <p class="center-address">🏥 <strong>Hospital:</strong> Caritas Hospital, Kottayam</p>
+          <p style="font-size: 0.9rem; color: #555; margin: 4px 0;">💧 <strong>Required Units:</strong> 3 Units (Packed Red Cells)</p>
+          <a href="tel:+919447000000" class="btn-primary" style="margin-top:1rem; display:inline-block; padding:0.6rem 1.3rem; font-size:0.85rem; background:#111; border-color:#111;">Contact Bystander 📞</a>
+        </div>
+
+        <div class="center-card" data-district="ernakulam" style="border-left: 5px solid #C8102E;">
+          <div class="center-badge urgent" style="background: #ef233c;">🚨 EMERGENCY</div>
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+            <h3 style="margin:0; font-size:1.2rem;">Patient: Ameya Nair</h3>
+            <span style="background: #C8102E; color: white; font-weight: bold; padding: 4px 10px; border-radius: 6px; font-size: 1rem;">A -ve</span>
+          </div>
+          <p class="center-address">🏥 <strong>Hospital:</strong> Aster Medcity, Ernakulam</p>
+          <p style="font-size: 0.9rem; color: #555; margin: 4px 0;">💧 <strong>Required Units:</strong> 2 Units (Single Donor Platelets)</p>
+          <a href="tel:+919846000000" class="btn-primary" style="margin-top:1rem; display:inline-block; padding:0.6rem 1.3rem; font-size:0.85rem; background:#111; border-color:#111;">Contact Bystander 📞</a>
+        </div>
+
+      </div>
+
+    </div>
+
+    <p id="noResults" style="display:none;text-align:center;color:#888;padding:3rem 1rem;font-family:'DM Sans', sans-serif;">No matching results found in this view category.</p>
+  </section>
+
+  <footer>
+    <div class="footer-grid" style="max-width:1200px; margin:0 auto; padding:2rem 20px; display:flex; justify-content:space-between;">
+      <div class="footer-brand"><div class="footer-logo">Life<span>Flow</span></div></div>
+      <p style="color:#aaa; font-size:0.9rem;">© 2026 LifeFlow Blood Donation Curriculum Project.</p>
+    </div>
+  </footer>
+
+  <script>
+    let activeView = "centers"; 
+    let currentSelectedDistrict = "all";
+
+    // SESSION COMPLIANCE ENGINE RUNS ON PAGE LOAD
+    window.onload = function() {
+      const activeSessionUser = localStorage.getItem('currentUser');
+
+      if (activeSessionUser) {
+        const user = JSON.parse(activeSessionUser);
+
+        // 1. Unveil the dynamic profile grid banner at top of workspace
+        document.getElementById('userProfilePanel').style.display = 'block';
+        document.getElementById('sessName').innerText = user.name;
+        document.getElementById('sessBlood').innerText = user.bloodGroup;
+        document.getElementById('sessDistrict').innerText = user.district.toUpperCase();
+
+        // 2. Transfigure the navbar link text nodes
+        document.getElementById('navLoginLink').innerText = `👤 ${user.name}`;
+        document.getElementById('navLoginLink').href = "#"; 
+        
+        const logoutNavBtn = document.getElementById('navCtaButton');
+        logoutNavBtn.innerText = "Log Out";
+        logoutNavBtn.href = "#";
+        logoutNavBtn.style.background = "#111";
+        logoutNavBtn.style.borderColor = "#111";
+        logoutNavBtn.onclick = logoutSession;
+
+        // 3. UX Optimization feature: Auto-filter workspace to the user's home district chip instantly
+        const matchingDistrictChip = document.getElementById(`chip-${user.district.toLowerCase()}`);
+        if (matchingDistrictChip) {
+          filterDistrict(user.district.toLowerCase(), matchingDistrictChip);
+        }
+      }
+    };
+
+    function logoutSession() {
+      if(confirm("Confirm logging out of current profile?")) {
+        localStorage.removeItem('currentUser');
+        window.location.reload();
+      }
+    }
+
+    // INTERACTIVE GRID TOGGLE SWAP VIEW ROUTING
+    function switchView(viewMode) {
+      activeView = viewMode;
+      const centersGrid = document.getElementById('centersViewGrid');
+      const recipientsGrid = document.getElementById('recipientsViewGrid');
+      const btnCenters = document.getElementById('toggleCenters');
+      const btnRecipients = document.getElementById('toggleRecipients');
+
+      if (viewMode === 'centers') {
+        centersGrid.style.display = 'grid';
+        recipientsGrid.style.display = 'none';
+        btnCenters.style.background = '#C8102E'; btnCenters.style.color = 'white';
+        btnRecipients.style.background = '#f1f2f6'; btnRecipients.style.color = '#555';
+      } else {
+        centersGrid.style.display = 'none';
+        recipientsGrid.style.display = 'grid';
+        btnRecipients.style.background = '#C8102E'; btnRecipients.style.color = 'white';
+        btnCenters.style.background = '#f1f2f6'; btnCenters.style.color = '#555';
+      }
+      applyFilters();
+    }
+
+    // CAROUSEL BADGE CLICK CHIP HANDLER
+    function filterDistrict(districtName, element) {
+      currentSelectedDistrict = districtName;
+      document.getElementById('searchInput').value = ""; 
+
+      const badges = document.querySelectorAll('.badge-card');
+      badges.forEach(b => {
+        b.style.background = "white"; b.style.color = "#333"; b.style.borderColor = "#eee"; b.style.fontWeight = "500";
+      });
+
+      if (element) {
+        element.style.background = "#C8102E"; element.style.color = "white"; element.style.borderColor = "#C8102E"; element.style.fontWeight = "600";
+      }
+      applyFilters();
+    }
+
+    // LOGICAL DATA ARCHITECTURE CROSS-MUTATION FILTER PIPE
+    function applyFilters() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const targetGridId = activeView === 'centers' ? 'centersViewGrid' : 'recipientsViewGrid';
+      const cards = document.querySelectorAll(`#${targetGridId} .center-card`);
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const districtAttr = card.getAttribute('data-district').toLowerCase();
+        const textContent = card.innerText.toLowerCase();
+
+        const matchesDistrict = (currentSelectedDistrict === 'all' || districtAttr === currentSelectedDistrict);
+        const matchesSearch = textContent.includes(query);
+
+        if (matchesDistrict && matchesSearch) {
+          card.style.display = '';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      document.getElementById('noResults').style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+
+    function searchCards() {
+      const query = document.getElementById('searchInput').value;
+      if (query !== "") {
+        const badges = document.querySelectorAll('.badge-card');
+        badges.forEach(b => { b.style.background = "white"; b.style.color = "#333"; b.style.borderColor = "#eee"; });
+        document.getElementById('btn-all').style.background = "#C8102E";
+        document.getElementById('btn-all').style.color = "white";
+        currentSelectedDistrict = "all";
+      }
+      applyFilters();
+    }
+  </script>
+</body>
+</html>

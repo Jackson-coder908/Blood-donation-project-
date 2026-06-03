@@ -1,0 +1,60 @@
+/* ==========================================
+   LifeFlow — Blood Request Page Styles
+   ========================================== */
+
+.page-hero-dark { background: var(--dark); }
+
+.request-layout { grid-template-columns: 1fr 320px; }
+
+.urgency-selector { margin-bottom: 2rem; }
+.urgency-label { font-size: 0.875rem; font-weight: 600; color: var(--charcoal); margin-bottom: 0.8rem; }
+.urgency-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; }
+.urgency-opt input { display: none; }
+.opt-card {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 0.3rem; padding: 1rem 0.8rem;
+  border: 2px solid var(--border); border-radius: 12px;
+  cursor: pointer; text-align: center; transition: all 0.2s; background: white;
+}
+.opt-card:hover { border-color: #C8A080; }
+.opt-card.selected { border-color: var(--red); background: rgba(200,16,46,0.04); }
+.opt-card.opt-emergency.selected { border-color: #C8102E; background: rgba(200,16,46,0.06); }
+.opt-card.opt-urgent.selected { border-color: #FF8C00; background: rgba(255,140,0,0.06); }
+.opt-card.opt-scheduled.selected { border-color: #28A745; background: rgba(40,167,69,0.06); }
+.opt-icon { font-size: 1.5rem; }
+.opt-card strong { font-size: 0.88rem; }
+.opt-card small { font-size: 0.72rem; color: var(--warm-gray); }
+
+.form-section-title {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--warm-gray); padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);
+}
+
+textarea {
+  padding: 0.8rem 1rem; border: 1.5px solid #E0D5CC; border-radius: 10px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.95rem; color: var(--charcoal);
+  resize: vertical; transition: border-color 0.2s, box-shadow 0.2s; outline: none; width: 100%;
+}
+textarea:focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(200,16,46,0.08); }
+
+.req-submit { background: var(--dark); }
+.req-submit:hover { background: #2a1f1a; }
+
+.response-times { list-style: none; }
+.response-times li {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.5rem 0; font-size: 0.88rem; border-bottom: 1px solid var(--border);
+}
+.response-times li:last-child { border-bottom: none; }
+.rt-badge {
+  font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 50px;
+  letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap;
+}
+.rt-badge.emergency { background: rgba(200,16,46,0.1); color: var(--red); }
+.rt-badge.urgent { background: rgba(255,140,0,0.12); color: #FF8C00; }
+.rt-badge.scheduled { background: rgba(40,167,69,0.1); color: #28A745; }
+
+@media (max-width: 768px) {
+  .request-layout { grid-template-columns: 1fr; }
+  .urgency-options { grid-template-columns: repeat(3, 1fr); }
+}

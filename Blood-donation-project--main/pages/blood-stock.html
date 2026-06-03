@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Live Blood Stock Tracker — LifeFlow</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link rel="stylesheet" href="../css/pages.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --critical: #ef233c;
+      --stable: #2ec4b6;
+      --warning: #ffb703;
+      --dark-card: #1e1e24;
+    }
+
+    .stock-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-top: 2rem;
+    }
+
+    .stock-card {
+      background: white;
+      border: 1px solid #eef0f2;
+      border-radius: 16px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.01);
+    }
+
+    .stock-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+    }
+
+    .stock-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .blood-group-badge {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #111;
+    }
+
+    .status-pill {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .status-critical { background: rgba(239, 35, 60, 0.1); color: var(--critical); }
+    .status-warning { background: rgba(255, 183, 3, 0.1); color: var(--warning); }
+    .status-stable { background: rgba(46, 196, 182, 0.1); color: var(--stable); }
+
+    /* Progress Bar Metrics */
+    .progress-container {
+      background: #f1f2f6;
+      border-radius: 8px;
+      height: 8px;
+      width: 100%;
+      margin: 10px 0 15px 0;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      border-radius: 8px;
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Live pulse animation to show data activity */
+    .live-pulse {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: #2ec4b6;
+      border-radius: 50%;
+      margin-right: 8px;
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.9); opacity: 0.6; box-shadow: 0 0 0 0 rgba(46, 196, 182, 0.5); }
+      70% { transform: scale(1.1); opacity: 1; box-shadow: 0 0 0 6px rgba(46, 196, 182, 0); }
+      100% { transform: scale(0.9); opacity: 0.6; box-shadow: 0 0 0 0 rgba(46, 196, 182, 0); }
+    }
+
+    .filter-btn {
+      background: white; border: 1px solid #ddd; padding: 8px 18px; border-radius: 20px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 500; transition: all 0.2s;
+    }
+    .filter-btn.active {
+      background: #C8102E; color: white; border-color: #C8102E;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR ALIGNED WITH YOUR BRAND -->
+  <nav id="navbar">
+    <a href="../index.html" class="nav-logo">Life<span>Flow</span></a>
+    <ul class="nav-links">
+      <li><a href="../index.html#why">Why Donate</a></li>
+      <li><a href="find-center.html">Find Center</a></li>
+      <li><a href="blood-stock.html">Blood Stock</a></li>
+      <li><a href="request-blood.html">Request Blood</a></li>
+      <li><a href="login.html">Donor Login</a></li>
+    </ul>
+    <a href="register.html" class="nav-cta">Donate Now</a>
+  </nav>
+
+  <main class="page-hero" style="padding: 4rem 0 1rem 0;">
+    <div class="page-hero-content" style="text-align: center;">
+      <span class="section-tag"><span class="live-pulse"></span>Live State Network Monitoring</span>
+      <h1>Kerala Regional<br/><em>Blood Stock Directory</em></h1>
+      <p>Real-time availability metrics across combined government medical colleges and verified storage centers.</p>
+    </div>
+  </main>
+
+  <section class="section" style="max-width: 1100px; margin: 0 auto; padding: 2rem 20px;">
+    
+    <!-- CONTROL HEADER INTERFACE -->
+    <div style="background: white; border-radius: 16px; padding: 20px; border: 1px solid #eef0f2; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px;">
+      
+      <!-- District Choice Selector -->
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <label style="font-weight: 600; color:#333; font-size:0.95rem;">Select District:</label>
+        <select id="districtSelect" onchange="updateStockDisplay()" style="padding: 10px 15px; border-radius: 8px; border: 1px solid #ddd; font-family:'DM Sans'; font-weight:500; outline:none; background:#f8f9fa;">
+          <option value="all">All Kerala (Consolidated)</option>
+          <option value="kottayam">Kottayam</option>
+          <option value="thiruvananthapuram">Thiruvananthapuram</option>
+          <option value="ernakulam">Ernakulam</option>
+          <option value="kozhikode">Kozhikode</option>
+        </select>
+      </div>
+
+      <!-- Component Filter Buttons -->
+      <div style="display: flex; gap: 8px;" id="componentFilters">
+        <button class="filter-btn active" onclick="filterComponent('Whole Blood', this)">Whole Blood</button>
+        <button class="filter-btn" onclick="filterComponent('Platelets', this)">Platelets</button>
+        <button class="filter-btn" onclick="filterComponent('Plasma', this)">Plasma</button>
+      </div>
+    </div>
+
+    <!-- LIVE MATRIX CARDS VIEWPORT -->
+    <div class="stock-grid" id="stockGrid">
+      <!-- Generated via JS Loop -->
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem; font-size: 0.85rem; color: #888;">
+      ℹ️ Simulated numbers auto-fluctuate organically within 1-2 units every few seconds to reflect actual regional tracking patterns.
+    </div>
+
+  </section>
+
+  <!-- RECIPIENT EMERGENCY NOTICE ACTION BAR -->
+  <section style="background: #111; color: white; padding: 40px 20px; text-align: center; margin-top: 4rem;">
+    <h3 style="font-family:'Playfair Display'; font-size: 1.8rem; margin-bottom: 10px;">Is your needed blood type flagged as <span style="color:var(--critical)">Critical</span>?</h3>
+    <p style="color:#aaa; max-width: 600px; margin: 0 auto 20px auto; font-size: 0.95rem;">Do not wait for standard processing. Broadcast an immediate emergency alert directly to our volunteer network across Kerala.</p>
+    <a href="request-blood.html" class="btn-primary" style="background:var(--critical); border-color:var(--critical); display:inline-block; padding: 12px 30px; border-radius: 25px;">Create Emergency Request 🚨</a>
+  </section>
+
+  <script>
+    // CORE MOCK DATA STRUCTURE (Simulating dynamic database counts per district/component)
+    const stockDatabase = {
+      "Whole Blood": {
+        "all": { "O+": 142, "O-": 18, "A+": 94, "A-": 22, "B+": 115, "B-": 14, "AB+": 56, "AB-": 8 },
+        "kottayam": { "O+": 35, "O-": 2, "A+": 22, "A-": 5, "B+": 31, "B-": 1, "AB+": 12, "AB-": 0 },
+        "thiruvananthapuram": { "O+": 48, "O-": 6, "A+": 31, "A-": 8, "B+": 42, "B-": 4, "AB+": 19, "AB-": 3 },
+        "ernakulam": { "O+": 41, "O-": 7, "A+": 28, "A-": 6, "B+": 29, "B-": 7, "AB+": 18, "AB-": 4 },
+        "kozhikode": { "O+": 18, "O-": 3, "A+": 13, "A-": 3, "B+": 13, "B-": 2, "AB+": 7, "AB-": 1 }
+      },
+      "Platelets": {
+        "all": { "O+": 85, "O-": 12, "A+": 55, "A-": 9, "B+": 70, "B-": 11, "AB+": 30, "AB-": 4 },
+        "kottayam": { "O+": 20, "O-": 3, "A+": 12, "A-": 2, "B+": 15, "B-": 2, "AB+": 8, "AB-": 1 }
+        // (Other regional properties auto-fall back gracefully)
+      },
+      "Plasma": {
+        "all": { "O+": 190, "O-": 40, "A+": 120, "A-": 35, "B+": 160, "B-": 25, "AB+": 90, "AB-": 15 }
+      }
+    };
+
+    let activeComponent = "Whole Blood";
+
+    function filterComponent(component, element) {
+      activeComponent = component;
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      element.classList.add('active');
+      updateStockDisplay();
+    }
+
+    function updateStockDisplay() {
+      const district = document.getElementById('districtSelect').value;
+      const grid = document.getElementById('stockGrid');
+      grid.innerHTML = "";
+
+      // Fallback architecture to 'all' if specific data sub-matrices aren't fully populated
+      const componentData = stockDatabase[activeComponent][district] || stockDatabase[activeComponent]["all"];
+      
+      // Setting dynamic visual caps based on whether we look at localized data or collective state metrics
+      const maximumCapacity = district === 'all' ? 200 : 60;
+
+      for (const [group, units] of Object.entries(componentData)) {
+        // Determine Health Status Parameters dynamically based on volume
+        let statusText = "Stable Stock";
+        let statusClass = "status-stable";
+        let progressColor = "#2ec4b6";
+
+        if (units <= (maximumCapacity * 0.15)) {
+          statusText = "Critical Shortage";
+          statusClass = "status-critical";
+          progressColor = "#ef233c";
+        } else if (units <= (maximumCapacity * 0.45)) {
+          statusText = "Low Availability";
+          statusClass = "status-warning";
+          progressColor = "#ffb703";
+        }
+
+        const calculatedPercentage = Math.min((units / maximumCapacity) * 100, 100);
+
+        const cardHTML = `
+          <div class="stock-card" id="card-${group}">
+            <div class="stock-header">
+              <span class="blood-group-badge">${group}</span>
+              <span class="status-pill ${statusClass}">${statusText}</span>
+            </div>
+            <div style="font-size: 0.85rem; color: #666; font-weight: 500;">Available Units:</div>
+            <div style="font-size: 2rem; font-weight: 700; color: #1a1a1a; margin: 2px 0 10px 0;">
+              <span class="unit-counter">${units}</span> <span style="font-size:1rem; color:#888; font-weight:400;">Units</span>
+            </div>
+            <div class="progress-container">
+              <div class="progress-bar" style="width: ${calculatedPercentage}%; background: ${progressColor};"></div>
+            </div>
+            <div style="font-size: 0.75rem; color: #999; display: flex; justify-content: space-between;">
+              <span>Target Cap: ${maximumCapacity} U</span>
+              <span>Updated: Just Now</span>
+            </div>
+          </div>
+        `;
+        grid.innerHTML += cardHTML;
+      }
+    }
+
+    // SIMULATED REAL-TIME INTERACTIVE TICKER SYSTEM
+    // This loops constantly in the background modifying counts slightly to represent real activity.
+    setInterval(() => {
+      const currentDistrict = document.getElementById('districtSelect').value;
+      
+      // Randomly pick a blood type out of the loop array
+      const groups = ["O+", "O-", "A+", "A-", "B+", "B-", "AB+", "AB-"];
+      const randomGroup = groups[Math.floor(Math.random() * groups.length)];
+      
+      // Fluctuates volume upwards or downwards organically
+      const fluctuation = Math.random() > 0.5 ? 1 : -1;
+      
+      if(stockDatabase[activeComponent][currentDistrict] && stockDatabase[activeComponent][currentDistrict][randomGroup] !== undefined) {
+        let currentCount = stockDatabase[activeComponent][currentDistrict][randomGroup];
+        if (currentCount > 0 || fluctuation === 1) {
+          stockDatabase[activeComponent][currentDistrict][randomGroup] += fluctuation;
+          
+          // Target rendering node without layout-shifts
+          const targetCard = document.getElementById(`card-${randomGroup}`);
+          if (targetCard) {
+            const counterNode = targetCard.querySelector('.unit-counter');
+            if (counterNode) {
+              counterNode.innerText = stockDatabase[activeComponent][currentDistrict][randomGroup];
+              counterNode.style.color = fluctuation > 0 ? '#2ec4b6' : '#ef233c';
+              setTimeout(() => counterNode.style.color = '#1a1a1a', 1000);
+            }
+          }
+        }
+      }
+    }, 3500); // Ticks every 3.5 seconds
+
+    // Initial Bootstrap Render Run
+    window.onload = updateStockDisplay;
+  </script>
+</body>
+</html>

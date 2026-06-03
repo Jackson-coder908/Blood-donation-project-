@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Donor Login — LifeFlow</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link rel="stylesheet" href="../css/pages.css"/>
+  <link rel="stylesheet" href="../css/login.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+</head>
+<body>
+  <nav id="navbar">
+    <a href="../index.html" class="nav-logo">Life<span>Flow</span></a>
+    <ul class="nav-links">
+      <li><a href="../index.html#why">Why Donate</a></li>
+      <li><a href="find-center.html">Find Center</a></li>
+      <li><a href="blood-stock.html">Blood Stock</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+    </ul>
+    <a href="register.html" class="nav-cta">Donate Now</a>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="../index.html#why">Why Donate</a></li>
+      <li><a href="find-center.html">Find Center</a></li>
+      <li><a href="blood-stock.html">Blood Stock</a></li>
+      <li><a href="register.html" class="mobile-cta">Donate Now</a></li>
+    </ul>
+  </div>
+  <div id="loginView" class="auth-page">
+    <div class="auth-card">
+      <a href="../index.html" class="auth-logo">Life<span>Flow</span></a>
+      <h2>Welcome Back</h2>
+      <p class="auth-sub">Sign in to view your donation history and manage appointments.</p>
+      <form id="loginForm" class="auth-form" novalidate>
+        <div class="form-group">
+          <label for="loginEmail">Email Address</label>
+          <input type="email" id="loginEmail" placeholder="you@example.com" required/>
+          <span class="error-msg">Please enter a valid email.</span>
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <div class="pass-wrap">
+            <input type="password" id="loginPassword" placeholder="••••••••" required/>
+            <button type="button" class="toggle-pass" onclick="togglePass('loginPassword', this)">Show</button>
+          </div>
+          <span class="error-msg">Please enter your password.</span>
+        </div>
+        <div class="auth-row">
+          <label class="checkbox-label"><input type="checkbox"/> Remember me</label>
+          <a href="#" class="forgot-link">Forgot password?</a>
+        </div>
+        <button type="submit" class="btn-primary btn-submit">Sign In →</button>
+      </form>
+      <p class="auth-switch">New donor? <a href="register.html">Create an account</a></p>
+      <div class="demo-hint">
+        <strong>Demo:</strong> Use any email + password to log in.
+      </div>
+    </div>
+    <div class="auth-visual">
+      <div class="auth-visual-inner">
+        <div class="av-stat"><span class="av-num">114K</span><span class="av-label">Lives Saved</span></div>
+        <div class="av-drop">🩸</div>
+        <div class="av-stat"><span class="av-num">38K+</span><span class="av-label">Donors This Month</span></div>
+        <p class="av-quote">"Every donation is a gift of life."</p>
+      </div>
+    </div>
+  </div>
+  <div id="profileView" style="display:none">
+    <div class="profile-header">
+      <div class="profile-header-inner">
+        <div class="profile-avatar" id="profileAvatar">M</div>
+        <div class="profile-info">
+          <h1 id="profileName">Marcus Thompson</h1>
+          <p id="profileEmail">marcus@example.com</p>
+          <div class="profile-badges">
+            <span class="badge-type" id="profileBloodType">O+</span>
+            <span class="badge-donor">🏆 Elite Donor</span>
+          </div>
+        </div>
+        <button class="btn-ghost" onclick="logout()" style="margin-left:auto">Sign Out</button>
+      </div>
+    </div>
+    <div class="dashboard">
+      <div class="dash-stats">
+        <div class="dash-stat"><div class="ds-num">12</div><div class="ds-label">Total Donations</div><div class="ds-sub">Since 2019</div></div>
+        <div class="dash-stat dash-stat-red"><div class="ds-num">36</div><div class="ds-label">Lives Impacted</div><div class="ds-sub">3 per donation</div></div>
+        <div class="dash-stat"><div class="ds-num">6.0L</div><div class="ds-label">Blood Donated</div><div class="ds-sub">In total</div></div>
+        <div class="dash-stat"><div class="ds-num">38d</div><div class="ds-label">Until Next Eligible</div><div class="ds-sub">Mar 15, 2025</div></div>
+      </div>
+      <div class="dash-grid">
+        <div class="dash-card dash-card-wide">
+          <h3>Donation History</h3>
+          <div class="history-table-wrap">
+            <table class="history-table">
+              <thead>
+                <tr><th>Date</th><th>Type</th><th>Center</th><th>Units</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Feb 5, 2025</td><td><span class="comp-badge">Whole Blood</span></td><td>Downtown Medical Center</td><td>1</td><td><span class="status-badge used">Used</span></td></tr>
+                <tr><td>Nov 20, 2024</td><td><span class="comp-badge">Whole Blood</span></td><td>Northpark Hospital</td><td>1</td><td><span class="status-badge used">Used</span></td></tr>
+                <tr><td>Sep 10, 2024</td><td><span class="comp-badge platelet">Platelets</span></td><td>Downtown Medical Center</td><td>1 apheresis</td><td><span class="status-badge used">Used</span></td></tr>
+                <tr><td>Jul 1, 2024</td><td><span class="comp-badge">Whole Blood</span></td><td>Westside Community Clinic</td><td>1</td><td><span class="status-badge processing">Processing</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="dash-card">
+          <h3>Next Appointment</h3>
+          <div class="appt-card">
+            <div class="appt-date">
+              <span class="appt-month">APR</span>
+              <span class="appt-day">12</span>
+              <span class="appt-year">2025</span>
+            </div>
+            <div class="appt-details">
+              <strong>Whole Blood Donation</strong>
+              <p>Downtown Medical Center</p>
+              <p>10:00 AM – 10:30 AM</p>
+            </div>
+          </div>
+          <a href="register.html" class="btn-primary" style="display:block;text-align:center;margin-top:1rem;padding:0.7rem">Reschedule</a>
+          <button class="btn-outline-red" style="display:block;width:100%;margin-top:0.5rem" onclick="alert('Appointment cancelled.')">Cancel</button>
+        </div>
+        <div class="dash-card">
+          <h3>Achievements</h3>
+          <div class="achievements">
+            <div class="achieve achieve-unlocked"><div class="achieve-icon">🩸</div><div><strong>First Drop</strong><small>First donation</small></div></div>
+            <div class="achieve achieve-unlocked"><div class="achieve-icon">🔟</div><div><strong>Ten Times Hero</strong><small>10 donations</small></div></div>
+            <div class="achieve achieve-unlocked"><div class="achieve-icon">⭐</div><div><strong>Elite Donor</strong><small>12+ donations</small></div></div>
+            <div class="achieve achieve-locked"><div class="achieve-icon">🏅</div><div><strong>Platinum</strong><small>25 donations needed</small></div></div>
+            <div class="achieve achieve-locked"><div class="achieve-icon">🎖️</div><div><strong>Legend</strong><small>50 donations needed</small></div></div>
+          </div>
+        </div>
+        <div class="dash-card">
+          <h3>Health Snapshot</h3>
+          <p class="card-sub">From your last screening — Feb 5, 2025</p>
+          <div class="health-items">
+            <div class="health-item"><span class="hi-label">Blood Type</span><span class="hi-value hi-good">O+</span></div>
+            <div class="health-item"><span class="hi-label">Hemoglobin</span><span class="hi-value hi-good">14.8 g/dL ✓</span></div>
+            <div class="health-item"><span class="hi-label">Blood Pressure</span><span class="hi-value hi-good">118/76 mmHg ✓</span></div>
+            <div class="health-item"><span class="hi-label">Pulse</span><span class="hi-value hi-good">72 bpm ✓</span></div>
+            <div class="health-item"><span class="hi-label">Weight</span><span class="hi-value">168 lbs</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="dash-cta">
+        <a href="register.html" class="btn-primary">Schedule Next Donation →</a>
+        <a href="blood-stock.html" class="btn-secondary">View Blood Stock</a>
+      </div>
+    </div>
+  </div>
+  <script src="../js/main.js"></script>
+  <script src="../js/login.js"></script>
+</body>
+</html>
