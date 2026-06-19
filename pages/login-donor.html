@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Donor Portal Gateway — LifeFlow</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link rel="stylesheet" href="../css/pages.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet"/>
+</head>
+<body>
+  <nav id="navbar">
+    <a href="../index.html" class="nav-logo">Life<span>Flow</span></a>
+  </nav>
+
+  <main class="page-hero" style="min-height: 85vh; display: flex; align-items: center; justify-content: center; padding: 40px 20px; background: #fffaf9;">
+    <div class="form-wrap" style="max-width: 450px; width: 100%; margin: 0 auto; background: #fff; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(231, 76, 60, 0.05); border: 1px solid #fdf2f2;">
+      <span class="section-tag" style="margin-bottom: 15px;">Donor Workspace</span>
+      <h2 style="font-family: 'Playfair Display', serif; font-size: 2.2rem; color: #1a1a1a; margin: 10px 0;">Welcome Back, <em style="color: #e74c3c; font-style: normal;">Donor</em></h2>
+      <p style="color: #666; margin-bottom: 30px; font-size: 0.95rem; line-height: 1.5;">Log in to view your scheduled donations, update details, or track your history.</p>
+
+      <form id="donorLoginForm" class="donate-form">
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label for="donorEmail" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Registered Email</label>
+          <input type="email" id="donorEmail" required placeholder="name@example.com" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: 'DM Sans', sans-serif;">
+        </div>
+        <div class="form-group" style="margin-bottom: 25px;">
+          <label for="donorPassword" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Password</label>
+          <input type="password" id="donorPassword" required placeholder="••••••••" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: 'DM Sans', sans-serif;">
+        </div>
+        <button type="submit" class="btn-primary btn-submit" style="width: 100%; display: block; border: none; cursor: pointer;">Access My Portal →</button>
+      </form>
+      
+      <p class="switch-portal" style="text-align: center; margin-top: 25px; font-size: 0.9rem; color: #666;">
+        Are you a hospital/recipient? <a href="login-recipient.html" style="color: #e74c3c; font-weight: 600; text-decoration: none;">Go here</a>
+      </p>
+    </div>
+  </main>
+
+  <script>
+    document.getElementById('donorLoginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      // 1. Grab whatever you type in the boxes
+      const email = document.getElementById('donorEmail').value.trim();
+      const password = document.getElementById('donorPassword').value;
+
+      console.log(`🔑 Donor intercept: Logging in user -> ${email}`);
+
+      // 2. Save your mock data to browser storage so the Donor Hub template loads up cleanly
+      localStorage.setItem('token', 'mock-donor-token-xyz-789');
+      localStorage.setItem('role', 'donor');
+
+      // Pre-fill session details for the live matching screen
+      sessionStorage.setItem('currentDonorName', 'Jayden Shelvi');
+      sessionStorage.setItem('currentDonorBlood', 'A+');
+      sessionStorage.setItem('currentDonorDistrict', 'Ernakulam');
+
+      // 3. Instant Pass! Redirect straight to your donor portal layout page
+      window.location.href = 'donor-portal.html'; 
+    });
+  </script>
+</body>
+</html>

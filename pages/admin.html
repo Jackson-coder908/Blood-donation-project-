@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifeFlow | Admin Dashboard</title>
+    <style>
+        body {
+            font-family: 'DM Sans', Arial, sans-serif;
+            background-color: #fcfbf7;
+            margin: 0;
+            padding: 0;
+            color: #2d3748;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: #ffffff;
+            border-bottom: 1px solid #edf2f7;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .navbar .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #de2910;
+        }
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.01);
+        }
+        h2 {
+            margin-top: 0;
+            color: #1a202c;
+            font-size: 1.5rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            text-align: left;
+        }
+        th {
+            background: #f7fafc;
+            padding: 12px;
+            font-weight: 600;
+            color: #4a5568;
+            border-bottom: 2px solid #edf2f7;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #edf2f7;
+        }
+        .badge {
+            background: #fff5f5;
+            color: #e53e3e;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .compat-badge {
+            background: #ebf8ff;
+            color: #2b6cb0;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+            max-width: 220px;
+            word-wrap: break-word;
+        }
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #e53e3e;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .delete-btn:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">LifeFlow Hub 🩸 Admin Control</div>
+    </nav>
+
+    <div class="dashboard-container">
+        <div class="card">
+            <h2>Active Live Broadcast Streams (SQLite Table Rows)</h2>
+            <p style="color: #718096; font-size: 0.9rem;">Real-time medical emergency streams pulling directly from your centralized infrastructure data grid pipeline.</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Hospital Name</th>
+                        <th>Required Group</th>
+                        <th>Medically Eligible Donors</th>
+                        <th>Target District</th>
+                        <th>Volume</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="requestTableBody">
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: #a0aec0; padding: 30px;">
+                            Connecting to SQLite table pipeline...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // 🩺 Centralized Medical Compatibility Array Rules Matrix
+        const bloodCompatibilityMap = {
+            'A+':  ['A+', 'A-', 'O+', 'O-'],
+            'A-':  ['A-', 'O-'],
+            'B+':  ['B+', 'B-', 'O+', 'O-'],
+            'B-':  ['B-', 'O-'],
+            'AB+': ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+            'AB-': ['A-', 'B-', 'AB-', 'O-'],
+            'O+':  ['O+', 'O-'],
+            'O-':  ['O-']
+        };
+
+        // 🔄 GET: Fetch rows from backend database
+        async function fetchRequests() {
+            try {
+                const response = await fetch('/api/requests');
+                if (!response.ok) throw new Error("Network issue.");
+                const data = await response.json();
+                renderTable(data);
+            } catch (err) {
+                console.error("Fetch error:", err);
+                document.getElementById('requestTableBody').innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: #e53e3e; font-weight: 600; padding: 30px;">
+                            ❌ Could not establish synchronized pipeline states. Verify index.js running status.
+                        </td>
+                    </tr>`;
+            }
+        }
+
+        // 📊 Render Function
+        function renderTable(requestsArray) {
+            const tableBody = document.getElementById('requestTableBody');
+            tableBody.innerHTML = '';
+
+            if (requestsArray.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: #718096; padding: 30px;">
+                            🎉 Zero active emergency requirements stored inside SQLite framework!
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            requestsArray.forEach(item => {
+                const facilityName = item.hospitalName || "Emergency Hub Request";
+                const location = item.district || "Ernakulam";
+                const units = item.unitsRequested || "1 Unit";
+                
+                // 🧬 DYNAMIC COMPATIBILITY CALCULATION:
+                // Find eligible donor groups for this patient's blood type
+                const targetType = item.bloodType ? item.bloodType.trim() : '';
+                const allowedDonors = bloodCompatibilityMap[targetType] || ['Unspecified'];
+                const compatibleString = allowedDonors.join(', ');
+
+                const row = `
+                    <tr>
+                        <td style="font-weight: 500;">${facilityName}</td>
+                        <td><span class="badge">${targetType}</span></td>
+                        <td><span class="compat-badge">🛡️ Acceptable: ${compatibleString}</span></td>
+                        <td>${location}</td>
+                        <td style="font-weight: 500; color: #4a5568;">${units}</td>
+                        <td>
+                            <button class="delete-btn" onclick="deleteRequest(${item.id})">Delete</button>
+                        </td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+        }
+
+        // 🗑️ DELETE: Remove row execution stream
+        async function deleteRequest(id) {
+            if (confirm("Are you sure you want to completely drop this logistical requirement from local database files?")) {
+                try {
+                    const response = await fetch(`/api/requests/${id}`, { method: 'DELETE' });
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        fetchRequests(); // Refresh rows automatically
+                    } else {
+                        alert("Error clearing record state logic.");
+                    }
+                } catch (err) {
+                    console.error("Deletion lifecycle failure:", err);
+                    alert("Could not talk to local backend cluster loops.");
+                }
+            }
+        }
+
+        // Run fetch event initialization loop on tab load execution
+        fetchRequests();
+    </script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Recipient Gateway Portal — LifeFlow</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link rel="stylesheet" href="../css/pages.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet"/>
+</head>
+<body>
+  <nav id="navbar">
+    <a href="../index.html" class="nav-logo">Life<span>Flow</span></a>
+  </nav>
+
+  <main class="page-hero" style="min-height: 85vh; display: flex; align-items: center; justify-content: center; padding: 40px 20px; background: #f4f6f8;">
+    <div class="form-wrap" style="max-width: 450px; width: 100%; margin: 0 auto; background: #fff; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(44, 62, 80, 0.05); border: 1px solid #e2e8f0;">
+      <span class="section-tag" style="background: #2c3e50; color: white; margin-bottom: 15px;">Hospital & Recipient Hub</span>
+      <h2 style="font-family: 'Playfair Display', serif; font-size: 2.2rem; color: #1a1a1a; margin: 10px 0;">Medical <em style="color: #2c3e50; font-style: normal;">Logistics</em></h2>
+      <p style="color: #666; margin-bottom: 30px; font-size: 0.95rem; line-height: 1.5;">Authorized access for hospitals and emergency contacts to check stocks and coordinate allocations.</p>
+
+      <form id="recipientLoginForm" class="donate-form">
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label for="hospitalID" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Hospital License / Email ID</label>
+          <input type="text" id="hospitalID" required placeholder="HOSP-KER-XXXX" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: 'DM Sans', sans-serif;">
+        </div>
+        <div class="form-group" style="margin-bottom: 25px;">
+          <label for="recipientPassword" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Security Passkey</label>
+          <input type="password" id="recipientPassword" required placeholder="••••••••" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: 'DM Sans', sans-serif;">
+        </div>
+        <button type="submit" class="btn-primary btn-submit" style="width: 100%; display: block; background: #2c3e50; border: none; cursor: pointer;">Verify Authority →</button>
+      </form>
+      
+      <p class="switch-portal" style="text-align: center; margin-top: 25px; font-size: 0.9rem; color: #666;">
+        Looking to donate blood? <a href="login-donor.html" style="color: #2c3e50; font-weight: 600; text-decoration: none;">Go to Donor Gateway</a>
+      </p>
+    </div>
+  </main>
+
+  <script>
+    document.getElementById('recipientLoginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      // Force successful session keys into browser memory
+      localStorage.setItem('token', 'mock-demo-token-xyz-123');
+      localStorage.setItem('role', 'recipient');
+
+      // Instantly slide into the actual form page
+      window.location.href = 'admin.html';
+    });
+  </script>
+</body>
+</html>
