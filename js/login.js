@@ -29,19 +29,28 @@ document.addEventListener('DOMContentLoaded', () => {
 // Auth Logic
 document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const email = document.getElementById('loginEmail').value;
+    const username = document.getElementById('loginEmail').value; // Fixed variable name
     const password = document.getElementById('loginPassword').value;
 
-    const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-    });
+    try {
+        const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
 
-    if (response.ok) {
         const data = await response.json();
-        // Save user AND stats to localStorage
-        localStorage.setItem('currentUser', JSON.stringify(data.user));
-        window.location.reload();
+
+        if (response.ok) {
+            localStorage.setItem('currentUser', JSON.stringify(data.user));
+            window.location.reload();
+        } else {
+            // This will show you exactly what the server error is
+            alert('Login failed: ' + (data.error || 'Unknown error'));
+            console.error('Server error:', data);
+        }
+    } catch (err) {
+        alert('Could not connect to server. Check terminal.');
+        console.error('Fetch error:', err);
     }
 });
