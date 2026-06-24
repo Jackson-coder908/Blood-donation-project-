@@ -157,12 +157,12 @@
 <body>
     <nav class="navbar">
         <div class="logo">LifeFlow 🩸</div>
-        <ul class="nav-links">
-            <li><a href="/index.html">Home</a></li>
-            <li><a href="/pages/register.html">Register</a></li>
-            <li><a href="/pages/donor-portal.html" class="active">Donor Hub</a></li>
-            <li><a href="/pages/request-blood.html">Request Blood</a></li>
-        </ul>
+       <ul class="nav-links">
+    <li><a href="/index.html">Home</a></li>
+    <li><a href="/pages/register.html">Register</a></li>
+    <li><a href="/pages/donor-portal.html" class="active" id="navDashboardLink">Dashboard</a></li>
+    <li><a href="/pages/request-blood.html">Request Blood</a></li>
+</ul>
     </nav>
 
     <div class="portal-layout">
@@ -206,9 +206,9 @@
 
             <!-- 🚨 ADDED: Dynamic Eligibility Status Container -->
             <div class="status-container">
-                <h4 style="margin: 0 0 8px 0; color: #1a202c; font-size: 0.95rem;">🩸 Tracking Metrics</h4>
-                <div class="status-item" id="profileAssignedHubDisplay">🏥 <b>Assigned Center:</b> Loading...</div>
-                <div class="status-item" id="profileNextDonationDisplay">📅 <b>Next Eligible Date:</b> Loading...</div>
+    <h4 style="margin: 0 0 8px 0; color: #1a202c; font-size: 0.95rem;">👤 Personal Credentials</h4>
+    <div class="status-item" id="displayAge">📅 <b>Age:</b> Loading...</div>
+    <div class="status-item" id="displayWeight">⚖️ <b>Weight:</b> Loading...</div>
             </div>
 
             <button class="btn-action" onclick="checkLiveMatches()">Scan For Live Matches 📡</button>
@@ -250,27 +250,27 @@
     };
 
     document.addEventListener('DOMContentLoaded', async () => {
-        // --- 1. Retrieve data from Local/Session Storage ---
-        const userDataString = localStorage.getItem('currentUser');
-        let dbName = "";
-        let dbBlood = "";
-        let dbDistrict = "";
+    // --- 1. Retrieve data from LocalStorage ---
+    const userDataString = localStorage.getItem('currentUser');
+    
+    // Default empty values
+    let dbName = "", dbBlood = "", dbDistrict = "", dbAge = "N/A", dbWeight = "N/A";
 
-        if (userDataString) {
-            try {
-                const userData = JSON.parse(userDataString);
-                dbName = userData.name || userData.username || "";
-                dbBlood = userData.bloodGroup || "";
-                dbDistrict = userData.district || "";
-                console.log("Verified database donor profile:", dbName);
-            } catch (e) {
-                console.error("Error parsing currentUser JSON:", e);
-            }
+    if (userDataString) {
+        try {
+            const userData = JSON.parse(userDataString);
+            dbName = userData.name || userData.username || "";
+            dbBlood = userData.bloodGroup || "";
+            dbDistrict = userData.district || "";
+            // ADDED: Retrieve Age and Weight if they exist in your user object
+            dbAge = userData.age || "N/A"; 
+            dbWeight = userData.weight || "N/A"; 
+            
+            console.log("Verified database donor profile:", dbName);
+        } catch (e) {
+            console.error("Error parsing currentUser JSON:", e);
         }
-
-        const savedName = localStorage.getItem('donorName');
-        const savedBlood = localStorage.getItem('donorBloodType');
-        const savedDist = localStorage.getItem('donorDistrict');
+    }
 
         // --- 2. Populate input fields ---
         document.getElementById("donorName").value = dbName || savedName || "Anjali Nair";

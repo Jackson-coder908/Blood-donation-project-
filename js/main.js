@@ -87,21 +87,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Clears layout confusion by hiding/showing valid links for logged in users
 function manageNavigationLinks(user) {
-    const navLinksContainer = document.querySelector('.nav-links'); // Target your header row
-    if (!navLinksContainer || !user) return;
+    const navDashboardLink = document.getElementById('navDashboardLink');
+    if (!navDashboardLink || !user) return;
 
-    // Check what role they have inside the database object
-    const role = user.role || localStorage.getItem('role');
-
-    if (role === 'donor') {
-        // Donors don't need administrative tables; show setup for scheduling/history
-        desktopCtaUpdate(`👤 Donor: ${user.name || user.username}`);
-    } else if (role === 'recipient') {
-        // Recipients see match options and inventory systems
-        desktopCtaUpdate(`🏥 Recipient: ${user.name || user.username}`);
-    }
+    // Remove "Recipient" or "Donor" labels, just show "Dashboard: Name"
+    navDashboardLink.textContent = `Dashboard: ${user.name || user.username}`;
 }
-
 function desktopCtaUpdate(text) {
     const desktopCta = document.querySelector('.nav-cta');
     const mobileCta = document.querySelector('.mobile-cta');
@@ -111,26 +102,27 @@ function desktopCtaUpdate(text) {
 
 // Automatically binds database values to elements to prevent blank states
 function syncProfileDashboard(user) {
-    // Top banner dynamic display tags
-    const txtName = document.getElementById('donorName');
-    const txtBlood = document.getElementById('donorBloodGroup');
-    
-    if (txtName) txtName.textContent = user.name || user.username || "Active User";
-    if (txtBlood) txtBlood.textContent = user.bloodGroup || "O+";
+    // Map your user object fields to the HTML Input IDs
+    const fieldMap = {
+        'firstNameInput': user.firstName,
+        'lastNameInput': user.lastName,
+        'emailInput': user.email,
+        'phoneInput': user.phone,
+        'dobInput': user.dob,
+        'weightInput': user.weight,
+        'bloodTypeInput': user.bloodGroup
+    };
 
-    // Input fields inside forms/simulations
-    const inputName = document.getElementById("donorNameInput") || document.getElementById("donorName");
-    const inputBlood = document.getElementById("bloodFilter") || document.getElementById("donorBloodGroupInput");
-    const inputDist = document.getElementById("districtFilter");
-    const inputWeight = document.getElementById("donorWeight");
-
-    // Handle inputs versus plain text elements safely
-    if (inputName && inputName.tagName === 'INPUT') inputName.value = user.name || user.username || "";
-    if (inputBlood && inputBlood.tagName === 'INPUT') inputBlood.value = user.bloodGroup || "";
-    if (inputDist && inputDist.tagName === 'INPUT') inputDist.value = user.district || "";
-    if (inputWeight && inputWeight.tagName === 'INPUT') inputWeight.value = user.weight || "65"; // Fills placeholder static data
+    // Loop through the map and fill if the element exists
+    for (const [id, value] of Object.entries(fieldMap)) {
+        const element = document.getElementById(id);
+        if (element && element.tagName === 'INPUT') {
+            element.value = value || "";
+            // Optional: Disable these inputs if you don't want them edited during donation
+            // element.disabled = true; 
+        }
+    }
 }
-
 // Unified Event Handling for interactive elements
 function setupActionListeners() {
     // Main target document click tree
