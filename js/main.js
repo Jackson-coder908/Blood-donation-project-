@@ -1,5 +1,6 @@
 // Add this to your top-level JS file
 document.addEventListener('DOMContentLoaded', () => {
+    autoFillProfile();
     const session = sessionStorage.getItem('lifeFlowSession');
     // If they are on a login/register page but ALREADY have a session, push them to dashboard
     if (session && (window.location.pathname.includes('login') || window.location.pathname.includes('register'))) {
@@ -156,6 +157,28 @@ function setupActionListeners() {
                 alert("Logged out successfully.");
                 window.location.href = "../index.html"; 
             }
+        }
+    });
+}
+// Add this helper function at the bottom of main.js
+function autoFillProfile() {
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    if (!user) return; // Stop if no user is logged in
+
+    // Define the map: HTML Input ID -> User Object Key
+    const fieldMap = {
+        'firstName': 'firstName', // 'firstName' is the ID in your HTML, 'firstName' is the key in your object
+        'lastName': 'lastName',
+        'email': 'email',
+        'phone': 'phone',
+        'dob': 'dob',
+        'weight': 'weight'
+    };
+
+    Object.keys(fieldMap).forEach(id => {
+        const input = document.getElementById(id);
+        if (input && input.value === "") {
+            input.value = user[fieldMap[id]] || "";
         }
     });
 }
