@@ -1,12 +1,36 @@
 // Add this to your top-level JS file
+// Add this to the very top of main.js to debug
 document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM loaded, running autoFillProfile...");
     autoFillProfile();
-    const session = sessionStorage.getItem('lifeFlowSession');
-    // If they are on a login/register page but ALREADY have a session, push them to dashboard
-    if (session && (window.location.pathname.includes('login') || window.location.pathname.includes('register'))) {
-        window.location.href = "donor-portal.html"; // Your dashboard page
-    }
 });
+
+function autoFillProfile() {
+    const userDataString = localStorage.getItem('currentUser');
+    if (!userDataString) {
+        console.log("No user found in localStorage.");
+        return;
+    }
+
+    const user = JSON.parse(userDataString);
+    console.log("Found user:", user);
+
+    const fieldMap = {
+        'firstName': 'firstName',
+        'lastName': 'lastName',
+        'email': 'email',
+        'phone': 'phone',
+        'dob': 'dob',
+        'weight': 'weight'
+    };
+
+    Object.keys(fieldMap).forEach(id => {
+        const input = document.getElementById(id);
+        if (input && user[fieldMap[id]]) {
+            input.value = user[fieldMap[id]];
+        }
+    });
+}
 // --- EXISTING UI FEATURES ---
 console.log("LifeFlow Dashboard Script Connected & Running!");
 
