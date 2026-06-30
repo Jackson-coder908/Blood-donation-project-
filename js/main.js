@@ -1,202 +1,79 @@
-// Add this to your top-level JS file
-// Add this to the very top of main.js to debug
+// --- Add this to your existing main.js ---
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM loaded, running autoFillProfile...");
-    autoFillProfile();
+    // 1. Existing Navigation Logic
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (currentUser) {
+        manageNavigationLinks(currentUser);
+        
+        // 2. TRIGGER THE FILLING OF FIELDS
+        fillDonorProfile(currentUser);
+    }
 });
 
-function autoFillProfile() {
-    const userDataString = localStorage.getItem('currentUser');
-    if (!userDataString) {
-        console.log("No user found in localStorage.");
-        return;
+function fillDonorProfile(user) {
+    // Fill text elements if they exist
+    const ageEl = document.getElementById('ageDisplay');
+    const weightEl = document.getElementById('weightDisplay');
+    const nameEl = document.querySelector('.donor-name'); // Ensure your HTML class matches
+
+    if (ageEl && user.dob) {
+        const birthDate = new Date(user.dob);
+        const age = new Date().getFullYear() - birthDate.getFullYear();
+        ageEl.textContent = `Age: ${age}`;
+    }
+    
+    if (weightEl && user.weight) {
+        weightEl.textContent = `Weight: ${user.weight} kg`;
+    }
+    
+    if (nameEl && user.name) {
+        nameEl.textContent = user.name;
+    }
+    
+    console.log("Profile Data Loaded:", user); // Check the console!
+}
+// --- 1. CORE SYSTEM DASHBOARD LOGIC ---
+document.addEventListener('DOMContentLoaded', () => {
+    const currentPath = window.location.pathname;
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+    // Dynamic Navigation
+    manageNavigationLinks(currentUser);
+
+    // Auto-fill logic (Unified)
+    if (currentUser) {
+        syncProfileData(currentUser);
     }
 
-    const user = JSON.parse(userDataString);
-    console.log("Found user:", user);
+    // Route Security
+    if (currentPath.includes('blood-stock.html')) {
+        const sessionToken = localStorage.getItem('token');
+        const userRole = localStorage.getItem('role');
+        if (!sessionToken || userRole !== 'recipient') {
+            alert("Access Denied: Recipient account required.");
+            window.location.href = "../index.html"; 
+        }
+    }
 
+    setupActionListeners();
+});
+
+// --- 2. PROFILE SYNC (Autofill) ---
+function syncProfileData(user) {
+    // MAPPING: HTML Input ID -> User Object Key
+    // Adjust the right side if your object keys are different (e.g., 'name' instead of 'firstName')
     const fieldMap = {
         'firstName': 'firstName',
         'lastName': 'lastName',
         'email': 'email',
         'phone': 'phone',
         'dob': 'dob',
-        'weight': 'weight'
-    };
-
-    Object.keys(fieldMap).forEach(id => {
-        const input = document.getElementById(id);
-        if (input && user[fieldMap[id]]) {
-            input.value = user[fieldMap[id]];
-        }
-    });
-}
-// --- EXISTING UI FEATURES ---
-console.log("LifeFlow Dashboard Script Connected & Running!");
-
-const navbar = document.getElementById('navbar');
-if (navbar) {
-  window.addEventListener('scroll', () => {
-    navbar.classList.toggle('scrolled', window.scrollY > 40);
-  });
-}
-
-// Hamburger menu
-const hamburger = document.getElementById('hamburger');
-const mobileMenu = document.getElementById('mobileMenu');
-if (hamburger && mobileMenu) {
-  hamburger.addEventListener('click', () => {
-    mobileMenu.classList.toggle('open');
-    document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
-  });
-  mobileMenu.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-      mobileMenu.classList.remove('open');
-      document.body.style.overflow = '';
-    });
-  });
-}
-
-// Scroll reveal
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-      observer.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.15 });
-
-document.querySelectorAll('.card, .step, .testimonial, .elig-col').forEach(el => {
-  el.classList.add('reveal');
-  observer.observe(el);
-});
-
-const style = document.createElement('style');
-style.textContent = `
-  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
-`;
-document.head.appendChild(style);
-
-
-// --- CORE SYSTEM DASHBOARD LOGIC ---
-document.addEventListener('DOMContentLoaded', () => {
-    const currentPath = window.location.pathname;
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-
-    // 1. Clear Confusion: Dynamic Navigation Links Based on User Type
-    manageNavigationLinks(currentUser);
-
-    if (currentUser) {
-        // 2. Map & Sync Real User Profiles into Forms/Dashboards
-        syncProfileDashboard(currentUser);
-    }
-
-    // 3. Route Security Guard
-    if (currentPath.includes('blood-stock.html')) {
-        const sessionToken = localStorage.getItem('token');
-        const userRole = localStorage.getItem('role');
-        if (!sessionToken || userRole !== 'recipient') {
-            alert("Access Denied: Recipient/Administrative account required.");
-            window.location.href = "../index.html"; 
-        }
-    }
-
-    // 4. Set Up Dynamic Event Listeners (Simulation Buttons, Canceling, and Deleting)
-    setupActionListeners();
-});
-
-
-// --- HELPER OPERATIONS ---
-
-// Clears layout confusion by hiding/showing valid links for logged in users
-function manageNavigationLinks(user) {
-    const navDashboardLink = document.getElementById('navDashboardLink');
-    if (!navDashboardLink || !user) return;
-
-    // Remove "Recipient" or "Donor" labels, just show "Dashboard: Name"
-    navDashboardLink.textContent = `Dashboard: ${user.name || user.username}`;
-}
-function desktopCtaUpdate(text) {
-    const desktopCta = document.querySelector('.nav-cta');
-    const mobileCta = document.querySelector('.mobile-cta');
-    if (desktopCta) desktopCta.innerHTML = text;
-    if (mobileCta) mobileCta.innerHTML = text;
-}
-
-// Automatically binds database values to elements to prevent blank states
-function syncProfileDashboard(user) {
-    // Map your user object fields to the HTML Input IDs
-    const fieldMap = {
-        'firstNameInput': user.firstName,
-        'lastNameInput': user.lastName,
-        'emailInput': user.email,
-        'phoneInput': user.phone,
-        'dobInput': user.dob,
-        'weightInput': user.weight,
-        'bloodTypeInput': user.bloodGroup
-    };
-
-    // Loop through the map and fill if the element exists
-    for (const [id, value] of Object.entries(fieldMap)) {
-        const element = document.getElementById(id);
-        if (element && element.tagName === 'INPUT') {
-            element.value = value || "";
-            // Optional: Disable these inputs if you don't want them edited during donation
-            // element.disabled = true; 
-        }
-    }
-}
-// Unified Event Handling for interactive elements
-function setupActionListeners() {
-    // Main target document click tree
-    document.addEventListener('click', (e) => {
-        
-        // A. Handle Simulation Action Trigger
-        if (e.target && e.target.classList.contains('simulate-btn')) {
-            alert("Success: Donation simulation process started for " + (e.target.dataset.hospital || "Selected Facility"));
-        }
-
-        // B. FIX: Handle "Cancel / Delete Next Donation" Operation
-        if (e.target && (e.target.id === 'cancelDonationBtn' || e.target.classList.contains('cancel-btn'))) {
-            e.preventDefault();
-            if (confirm("Are you sure you want to cancel your upcoming scheduled donation?")) {
-                // Update interface to confirm cancel without requiring hard refresh
-                const statusCard = e.target.closest('.card') || e.target.parentElement;
-                if (statusCard) {
-                    statusCard.innerHTML = `<h3 style="color: #dc3545;">⚠️ No Active Donations Scheduled</h3><p>You can book or simulate a new transaction below.</p>`;
-                }
-                alert("Appointment cleanly canceled.");
-            }
-        }
-
-        // C. Complete Dashboard Profile Deletion/Logout Execution
-        if (e.target && (e.target.id === 'deleteBtn' || e.target.classList.contains('account-delete-btn'))) {
-            e.preventDefault();
-            if (confirm("Are you sure you want to clear your current session and sign out?")) {
-                localStorage.removeItem('currentUser');
-                localStorage.removeItem('token');
-                localStorage.removeItem('role');
-                alert("Logged out successfully.");
-                window.location.href = "../index.html"; 
-            }
-        }
-    });
-}
-// Add this helper function at the bottom of main.js
-function autoFillProfile() {
-    const user = JSON.parse(localStorage.getItem('currentUser'));
-    if (!user) return; // Stop if no user is logged in
-
-    // Define the map: HTML Input ID -> User Object Key
-    const fieldMap = {
-        'firstName': 'firstName', // 'firstName' is the ID in your HTML, 'firstName' is the key in your object
-        'lastName': 'lastName',
-        'email': 'email',
-        'phone': 'phone',
-        'dob': 'dob',
-        'weight': 'weight'
+        'weight': 'weight',
+        'firstNameInput': 'firstName',
+        'lastNameInput': 'lastName',
+        'emailInput': 'email',
+        'phoneInput': 'phone',
+        'weightInput': 'weight'
     };
 
     Object.keys(fieldMap).forEach(id => {
@@ -204,5 +81,53 @@ function autoFillProfile() {
         if (input && input.value === "") {
             input.value = user[fieldMap[id]] || "";
         }
+    });
+}
+
+// --- 3. NAVIGATION & UI HELPERS ---
+function manageNavigationLinks(user) {
+    const navDashboardLink = document.getElementById('navDashboardLink');
+    if (navDashboardLink && user) {
+        navDashboardLink.textContent = `Dashboard: ${user.name || user.username || 'User'}`;
+    }
+}
+
+// --- 4. ACTION LISTENERS (Simulation, Cancel, Delete) ---
+function setupActionListeners() {
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('simulate-btn')) {
+            alert("Donation simulation started for: " + (e.target.dataset.hospital || "Selected Facility"));
+        }
+
+        if (e.target.id === 'cancelDonationBtn' || e.target.classList.contains('cancel-btn')) {
+            e.preventDefault();
+            if (confirm("Cancel upcoming donation?")) {
+                const statusCard = e.target.closest('.card') || e.target.parentElement;
+                if (statusCard) statusCard.innerHTML = `<h3>⚠️ No Active Donations</h3>`;
+            }
+        }
+
+        if (e.target.id === 'deleteBtn' || e.target.classList.contains('account-delete-btn')) {
+            e.preventDefault();
+            if (confirm("Clear session and sign out?")) {
+                localStorage.clear(); // Clear all data
+                window.location.href = "../index.html";
+            }
+        }
+    });
+}
+
+// --- 5. GLOBAL UI EFFECTS (Scroll, Menu) ---
+window.addEventListener('scroll', () => {
+    const navbar = document.getElementById('navbar');
+    if (navbar) navbar.classList.toggle('scrolled', window.scrollY > 40);
+});
+
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+if (hamburger && mobileMenu) {
+    hamburger.addEventListener('click', () => {
+        mobileMenu.classList.toggle('open');
+        document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
     });
 }

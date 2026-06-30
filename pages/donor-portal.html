@@ -4,7 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LifeFlow | Donor Hub</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
+        /* Add this to hide the elements until they are populated */
+#displayAge, #displayWeight, #profileAssignedHubDisplay, #profileNextDonationDisplay {
+    transition: opacity 0.3s ease;
+}
         body {
             font-family: 'DM Sans', Arial, sans-serif;
             background-color: #fcfbf7;
@@ -205,15 +212,21 @@
             </div>
 
             <!-- 🚨 ADDED: Dynamic Eligibility Status Container -->
-            <div class="status-container">
+           <div class="status-container">
     <h4 style="margin: 0 0 8px 0; color: #1a202c; font-size: 0.95rem;">👤 Personal Credentials</h4>
     <div class="status-item" id="displayAge">📅 <b>Age:</b> Loading...</div>
     <div class="status-item" id="displayWeight">⚖️ <b>Weight:</b> Loading...</div>
-            </div>
+    
+    <div class="status-item" id="profileAssignedHubDisplay">🏥 <b>Assigned Center:</b> Loading...</div>
+    <div class="status-item" id="profileNextDonationDisplay">📅 <b>Next Eligible Date:</b> Loading...</div>
+</div>
 
             <button class="btn-action" onclick="checkLiveMatches()">Scan For Live Matches 📡</button>
         </div>
-
+<div class="panel-card animate__animated animate__fadeInRight">
+    <h3>📍 Regional Hub Map</h3>
+    <div id="map" style="height: 400px; width: 100%; border-radius: 8px;"></div>
+</div>
         <div class="panel-card animate__animated animate__fadeInRight">
             <h3>🔔 Broadcast Match Stream</h3>
             <div id="notification-stream">
@@ -238,132 +251,42 @@
     </div>
 
 <script>
-    const compatibilityMap = {
-        'O-': ['O-'],
-        'O+': ['O+', 'O-'],
-        'A-': ['A-', 'O-'],
-        'A+': ['A+', 'A-', 'O+', 'O-'],
-        'B-': ['B-', 'O-'],
-        'B+': ['B+', 'B-', 'O+', 'O-'],
-        'AB-': ['AB-', 'A-', 'B-', 'O-'],
-        'AB+': ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
-    };
-
-    document.addEventListener('DOMContentLoaded', async () => {
-    // --- 1. Retrieve data from LocalStorage ---
-    const userDataString = localStorage.getItem('currentUser');
-    
-    // Default empty values
-    let dbName = "", dbBlood = "", dbDistrict = "", dbAge = "N/A", dbWeight = "N/A";
-
-    if (userDataString) {
+    document.addEventListener('DOMContentLoaded', () => {
+        // 1. Initialize Map
         try {
-            const userData = JSON.parse(userDataString);
-            dbName = userData.name || userData.username || "";
-            dbBlood = userData.bloodGroup || "";
-            dbDistrict = userData.district || "";
-            // ADDED: Retrieve Age and Weight if they exist in your user object
-            dbAge = userData.age || "N/A"; 
-            dbWeight = userData.weight || "N/A"; 
-            
-            console.log("Verified database donor profile:", dbName);
+            // This looks for the <div id="map"> we added
+            const map = L.map('map').setView([10.5, 76.5], 7);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+            console.log("Map initialized successfully.");
         } catch (e) {
-            console.error("Error parsing currentUser JSON:", e);
-        }
-    }
-
-        // --- 2. Populate input fields ---
-        document.getElementById("donorName").value = dbName || savedName || "Anjali Nair";
-        document.getElementById("bloodFilter").value = dbBlood || savedBlood || "B+"; 
-        document.getElementById("districtFilter").value = dbDistrict || savedDist || "Ernakulam";
-
-        // --- 3. UPDATED: Read from Registration Pipeline and update tracking HTML ---
-        const hubElement = document.getElementById('profileAssignedHubDisplay');
-        const dateElement = document.getElementById('profileNextDonationDisplay');
-
-        if (hubElement && dateElement) {
-            const chosenCenter = sessionStorage.getItem('selectedCenterName');
-            const nextDate = sessionStorage.getItem('nextDonationEligibility');
-
-            if (chosenCenter) {
-                hubElement.innerHTML = `🏥 <b>Assigned Center:</b> <span style="color: #de2910; font-weight: 600;">${chosenCenter}</span>`;
-            } else {
-                hubElement.innerHTML = `🏥 <b>Assigned Center:</b> <span style="color: #718096;">No primary center mapped yet.</span>`;
-            }
-
-            if (nextDate) {
-                const options = { year: 'numeric', month: 'long', day: 'numeric' };
-                const formattedDate = new Date(nextDate).toLocaleDateString('en-US', options);
-                dateElement.innerHTML = `📅 <b>Next Eligible Date:</b> <span style="color: #2b6cb0; font-weight: 600;">${formattedDate}</span>`;
-            } else {
-                dateElement.innerHTML = `📅 <b>Next Eligible Date:</b> <span style="color: #2f855a; font-weight: 600;">Eligible to Donate Today</span>`;
-            }
+            console.error("Map failed to load. Ensure Leaflet links are in your <head>:", e);
         }
 
-        // Run match calculations instantly
-        checkLiveMatches();
+        // 2. Populate User Data
+        const userDataString = localStorage.getItem('currentUser');
+        if (userDataString) {
+            const user = JSON.parse(userDataString);
+            
+            // Age
+            if(user.dob) {
+                const age = new Date().getFullYear() - new Date(user.dob).getFullYear();
+                document.getElementById("displayAge").innerHTML = `📅 <b>Age:</b> ${age}`;
+            }
+            // Weight
+            if(user.weight) {
+                document.getElementById("displayWeight").innerHTML = `⚖️ <b>Weight:</b> ${user.weight} kg`;
+            }
+            
+            // Center & Date (These will show data if saved from registration)
+            const hub = document.getElementById("profileAssignedHubDisplay");
+            const date = document.getElementById("profileNextDonationDisplay");
+            
+            if(hub) hub.innerHTML = `🏥 <b>Assigned Center:</b> ${user.selectedCenter || 'Pending'}`;
+            if(date) date.innerHTML = `📅 <b>Next Eligible:</b> ${user.nextDonationDate || 'Immediate'}`;
+        }
     });
-
-    async function checkLiveMatches() {
-        const bType = document.getElementById("bloodFilter").value;
-        const dist = document.getElementById("districtFilter").value;
-        const stream = document.getElementById("notification-stream");
-
-        localStorage.setItem('donorName', document.getElementById("donorName").value);
-        localStorage.setItem('donorBloodType', bType);
-        localStorage.setItem('donorDistrict', dist);
-
-        stream.innerHTML = "<p class='no-alerts'>Connecting to network routing streams...</p>";
-
-        try {
-            const response = await fetch(`http://localhost:5000/api/requests`);
-            if (!response.ok) throw new Error("API Network deficit");
-            const allRequests = await response.json();
-
-            stream.innerHTML = "";
-
-            const matches = allRequests.filter(req => {
-                const matchDistrict = req.district.toLowerCase() === dist.toLowerCase();
-                const patientBlood = req.bloodType;
-                const cleanDonorBlood = bType.trim();
-                
-                const allowedDonors = compatibilityMap[patientBlood] || [];
-                const isMedicallyCompatible = allowedDonors.includes(cleanDonorBlood);
-
-                return matchDistrict && isMedicallyCompatible;
-            });
-
-            if (matches.length === 0) {
-                stream.innerHTML = `
-                    <div class="no-alerts animate__animated animate__fadeIn">
-                        🎉 No active emergency strains matches for your type (<strong>${bType}</strong>) inside <strong>${dist}</strong> right now.
-                    </div>`;
-                return;
-            }
-
-            matches.forEach(req => {
-                const alertDiv = document.createElement("div");
-                alertDiv.className = "alert-item animate__animated animate__fadeInUp";
-                alertDiv.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px;">
-                        <div>
-                            <h4 style="margin: 0 0 5px 0; color: #c53030;">🚨 Match Found for Your Blood Group!</h4>
-                            <p style="margin: 0; font-size: 0.9rem; color: #2d3748;">
-                                Hospital: <strong>${req.hospitalName}</strong> requires immediate <strong>${req.bloodType}</strong>.
-                            </p>
-                            <p style="margin: 6px 0 0 0; font-size: 0.85rem; color: #4a5568;">Requested Volume: <strong>${req.unitsRequested || 2} Units</strong></p>
-                        </div>
-                        <button class="btn-simulate" onclick="simulateDonation('${req.bloodType}')">Simulate Donation ✅</button>
-                    </div>
-                `;
-                stream.appendChild(alertDiv);
-            });
-        } catch (error) {
-            console.error("Stream routing error:", error);
-            stream.innerHTML = "<div class='no-alerts' style='color:#e53e3e;'>Failed to map active server data feeds.</div>";
-        }
-    }
-</script> 
-
+</script>
 </body>
 </html>
