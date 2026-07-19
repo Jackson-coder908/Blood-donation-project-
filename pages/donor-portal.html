@@ -305,37 +305,28 @@
         document.addEventListener('DOMContentLoaded', () => {
             // 1. Initialize Map
             try {
-                // This looks for the <div id="map"> we added
                 const map = L.map('map').setView([10.5, 76.5], 7);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '© OpenStreetMap'
                 }).addTo(map);
-                console.log("Map initialized successfully.");
             } catch (e) {
-                console.error("Map failed to load. Ensure Leaflet links are in your <head>:", e);
+                console.error("Map failed to load:", e);
             }
 
-            // 2. Populate User Data
-            const userDataString = localStorage.getItem('currentUser');
-            if (userDataString) {
-                const user = JSON.parse(userDataString);
+            // 2. Populate User Data from sessionStorage
+            // We are now pulling the specific keys we set during login
+            const name = sessionStorage.getItem('currentDonorName');
+            const blood = sessionStorage.getItem('currentDonorBlood');
+            const district = sessionStorage.getItem('currentDonorDistrict');
 
-                // Age
-                if (user.dob) {
-                    const age = new Date().getFullYear() - new Date(user.dob).getFullYear();
-                    document.getElementById("displayAge").innerHTML = `📅 <b>Age:</b> ${age}`;
-                }
-                // Weight
-                if (user.weight) {
-                    document.getElementById("displayWeight").innerHTML = `⚖️ <b>Weight:</b> ${user.weight} kg`;
-                }
-
-                // Center & Date (These will show data if saved from registration)
-                const hub = document.getElementById("profileAssignedHubDisplay");
-                const date = document.getElementById("profileNextDonationDisplay");
-
-                if (hub) hub.innerHTML = `🏥 <b>Assigned Center:</b> ${user.selectedCenter || 'Pending'}`;
-                if (date) date.innerHTML = `📅 <b>Next Eligible:</b> ${user.nextDonationDate || 'Immediate'}`;
+            // Update the UI if the data exists
+            if (name) {
+                // Since you didn't have age/weight saved in session, 
+                // we display the name/details we do have.
+                document.getElementById("displayAge").innerHTML = `👤 <b>Name:</b> ${name}`;
+                document.getElementById("displayWeight").innerHTML = `🩸 <b>Group:</b> ${blood || 'N/A'}`;
+                document.getElementById("profileAssignedHubDisplay").innerHTML = `📍 <b>District:</b> ${district || 'N/A'}`;
+                document.getElementById("profileNextDonationDisplay").innerHTML = `📅 <b>Status:</b> Active Member`;
             }
         });
     </script>
