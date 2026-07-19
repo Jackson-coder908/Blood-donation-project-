@@ -7,7 +7,7 @@ const donationHistory = [
 function renderDonationHistory() {
     const tableBody = document.getElementById('history-body');
     tableBody.innerHTML = '';
-    
+
     // 1. Calculate values
     const totalDonations = donationHistory.length;
     const livesImpacted = totalDonations * 3;
@@ -17,7 +17,7 @@ function renderDonationHistory() {
     document.getElementById('statDonations').innerText = totalDonations;
     document.getElementById('statImpact').innerText = livesImpacted;
     document.getElementById('statVolume').innerText = totalUnits;
-    
+
     // 3. Render the Table (as you had before)
     donationHistory.forEach(donation => {
         const row = document.createElement('tr');
@@ -34,16 +34,16 @@ function renderDonationHistory() {
 function onLoginSuccess() {
     document.getElementById('loginView').style.display = 'none';
     document.getElementById('profileView').style.display = 'block';
-    
+
     // Now call the function to fill the table
     renderDonationHistory();
 }
 document.addEventListener('DOMContentLoaded', () => {
     const savedUser = localStorage.getItem('currentUser');
-    
+
     if (savedUser) {
         const user = JSON.parse(savedUser);
-        
+
         // Show Profile View, Hide Login View
         document.getElementById('loginView').style.display = 'none';
         document.getElementById('profileView').style.display = 'block';
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Inject Profile Details
         document.getElementById('profileName').textContent = user.name;
         document.getElementById('profileEmail').textContent = user.username;
-        
+
         // Inject Dynamic Stats (if stats exist in the data)
         if (user.stats) {
             document.getElementById('statDonations').textContent = user.stats.total;
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('statVolume').textContent = user.stats.volume;
             document.getElementById('statEligibility').textContent = user.stats.daysLeft + 'd';
         }
-        
+
         // Inject Appointment Center
         const center = sessionStorage.getItem('selectedCenterName');
         if (center) document.getElementById('dashboardApptCenter').textContent = center;
@@ -98,7 +98,7 @@ document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
 // This ensures the table renders when the page finishes loading
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM loaded. Attempting to render history...");
-    
+
     // Check if the element exists first
     const tableBody = document.getElementById('history-body');
     if (tableBody) {
@@ -107,5 +107,37 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Function called!");
     } else {
         console.warn("Element #history-body not found yet.");
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Only run this if we are on the dashboard page
+    if (window.location.pathname.includes('donor-portal.html')) {
+        const donorName = sessionStorage.getItem('currentDonorName');
+
+        // If the data exists, put it in the HTML
+        if (donorName) {
+            // Assuming you have these IDs in your HTML
+            document.getElementById('donorNameDisplay').innerText = donorName;
+        }
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Check if we are on the dashboard page
+    if (window.location.pathname.includes('donor-portal.html')) {
+
+        // Fetch the data we saved during login
+        const name = sessionStorage.getItem('currentDonorName');
+        const blood = sessionStorage.getItem('currentDonorBlood');
+
+        // If data exists, update the page elements
+        if (name) {
+            // Ensure these IDs exist in your HTML
+            if (document.getElementById('donorNameDisplay')) {
+                document.getElementById('donorNameDisplay').innerText = name;
+            }
+            // Add other fields as needed
+        }
     }
 });
