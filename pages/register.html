@@ -238,7 +238,7 @@
   <!-- Embedded Map Initialization Script -->
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      // Initialize map centered around central coordinates (e.g., Kerala default view)
+      // Initialize map centered around Kerala default view
       const map = L.map('map').setView([9.5916, 76.5222], 10);
 
       // Add OpenStreetMap tiles
@@ -252,25 +252,89 @@
         map.invalidateSize();
       }, 200);
 
-      // Geolocation button logic
+      let markersLayer = L.layerGroup().addTo(map);
+
+      // Geolocation & Nearest Hospitals/Clinics Logic (Finds up to 5 nearby)
       const findNearestBtn = document.getElementById('findNearestBtn');
       if (findNearestBtn) {
         findNearestBtn.addEventListener('click', function () {
           if (navigator.geolocation) {
+            document.getElementById('selected-camp-display').innerText = "Locating your position and scanning nearby clinics...";
+
             navigator.geolocation.getCurrentPosition(
-              (position) => {
+              async (position) => {
                 const lat = position.coords.latitude;
                 const lng = position.coords.longitude;
 
-                map.setView([lat, lng], 14);
+                map.setView([lat, lng], 13);
+                markersLayer.clearLayers();
 
-                L.marker([lat, lng]).addTo(map)
-                  .bindPopup("<b>Your Current Location</b>")
-                  .openPopup();
+                // Drop marker for user position
+                L.marker([lat, lng], {
+                  icon: L.divIcon({
+                    className: 'user-marker',
+                    html: '📍',
+                    iconSize: [25, 25]
+                  })
+                }).addTo(markersLayer).bindPopup("<b>You are here</b>").openPopup();
 
-                document.getElementById('selected-camp-display').innerText =
-                  `Location detected! Lat: ${lat.toFixed(2)}, Lng: ${lng.toFixed(2)}`;
-                document.getElementById('city').value = "Auto-detected Location";
+                // Overpass API query to find up to 5 hospitals/clinics within a 10km radius
+                const radius = 10000; // in meters
+                const overpassQuery = `
+                                [out:json][timeout:25];
+                                (
+                                  node["amenity"~"hospital|clinic|doctors"](around:${radius},${lat},${lng});
+                                  way["amenity"~"hospital|clinic|doctors"](around:${radius},${lat},${lng});
+                                );
+                                out body;
+                                >;
+                                out skel qt;
+                            `;
+
+                try {
+                  const response = await fetch('https://overpass-api.de/api/interpreter', {
+                    method: 'POST',
+                    body: overpassQuery
+                  });
+                  const data = await response.json();
+
+                  // Extract elements with names and calculate distance roughly
+                  let facilities = data.elements
+                    .filter(el => el.tags && el.tags.name)
+                    .map(el => {
+                      let fLat = el.lat || (el.center && el.center.lat);
+                      let fLon = el.lon || (el.center && el.center.lon);
+                      // Simple distance metric placeholder
+                      let dist = Math.hypot(fLat - lat, fLon - lng);
+                      return { ...el, lat: fLat, lon: fLon, distance: dist };
+                    })
+                    .sort((a, b) => a.distance - b.distance)
+                    .slice(0, 5); // Take top 5 nearest
+
+                  if (facilities.length > 0) {
+                    let htmlContent = `<strong>Nearest 5 Centers Found:</strong><ul style="text-align:left; margin-top:5px; padding-left:15px;">`;
+
+                    facilities.forEach((fac, index) => {
+                      // Add marker for each hospital/clinic
+                      L.marker([fac.lat, fac.lon]).addTo(markersLayer)
+                        .bindPopup(`<b>${fac.tags.name}</b><br>${fac.tags['addr:suburb'] || fac.tags['addr:city'] || 'Local Camp'}`);
+
+                      htmlContent += `<li>${fac.tags.name}</li>`;
+                    });
+                    htmlContent += `</ul>`;
+
+                    document.getElementById('selected-camp-display').innerHTML = htmlContent;
+                    document.getElementById('city').value = facilities[0].tags['addr:city'] || "Nearby Medical Center";
+                    document.getElementById('donor-district').value = facilities[0].tags['addr:district'] || "Local Region";
+                  } else {
+                    document.getElementById('selected-camp-display').innerText = "Location found, but no explicit clinics mapped nearby. Showing default layout.";
+                  }
+
+                } catch (err) {
+                  console.error("Error fetching nearby nodes:", err);
+                  document.getElementById('selected-camp-display').innerText = "Location detected successfully (Offline facility search mode).";
+                  document.getElementById('city').value = "Auto-detected Location";
+                }
               },
               (error) => {
                 alert("Unable to retrieve your location. Please check your location permissions.");
